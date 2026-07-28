@@ -1,0 +1,14 @@
+{
+  "name": "smart-tourist-assistant-root",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "install-all": "npm.cmd install --prefix frontend && npm.cmd install --prefix backend",
+    "dev": "concurrently \"npm.cmd run dev --prefix frontend\" \"npm.cmd run dev --prefix backend\"",
+    "start": "npm.cmd start --prefix backend",
+    "build": "npm.cmd run build --prefix frontend"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
