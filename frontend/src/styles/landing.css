@@ -1,21 +1,25 @@
 /* src/styles/landing.css */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Outfit:wght@100..900&display=swap');
+
 :root {
   --lp-bg-dark: #070a13;
-  --lp-bg-light: #f8fafc;
+  --lp-bg-light: #fdfbf7;      /* Warm linen/beige background for light mode */
   --lp-text-dark: #f8fafc;
-  --lp-text-light: #070a13;
-  --lp-primary: #a855f7;
-  --lp-secondary: #06b6d4;
+  --lp-text-light: #1c1917;    /* Warm stone charcoal for light mode */
+  --lp-primary: #e2b865;       /* Warm sand gold */
+  --lp-primary-hover: #f1cf8e; /* Lighter sand gold */
+  --lp-secondary: #06b6d4;     /* Accent teal */
   --lp-glass-dark: rgba(10, 15, 30, 0.7);
-  --lp-glass-light: rgba(255, 255, 255, 0.7);
-  --lp-glass-border-dark: rgba(168, 85, 247, 0.18);
-  --lp-glass-border-light: rgba(0, 0, 0, 0.1);
+  --lp-glass-light: rgba(253, 251, 247, 0.8);
+  --lp-glass-border-dark: rgba(226, 184, 101, 0.2);
+  --lp-glass-border-light: rgba(28, 25, 23, 0.1);
 }
 
 .landing-page {
   transition: background-color 0.3s ease, color 0.3s ease;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'Outfit', sans-serif;
   overflow-x: hidden;
+  letter-spacing: -0.01em;
 }
 
 .landing-page.dark {
@@ -28,6 +32,11 @@
   color: var(--lp-text-light);
 }
 
+/* Elegant Font Utilities */
+.font-serif {
+  font-family: 'Playfair Display', serif;
+}
+
 /* Glassmorphism Navbar */
 .lp-navbar {
   position: fixed;
@@ -35,26 +44,27 @@
   left: 0;
   right: 0;
   z-index: 100;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  padding: 1rem 2rem;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 1.5rem 3rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid;
+  transition: all 0.3s ease;
 }
 
 .landing-page.dark .lp-navbar {
-  background: var(--lp-glass-dark);
+  background: rgba(7, 10, 19, 0.75);
   border-color: var(--lp-glass-border-dark);
 }
 
 .landing-page.light .lp-navbar {
-  background: var(--lp-glass-light);
+  background: rgba(253, 251, 247, 0.75);
   border-color: var(--lp-glass-border-light);
 }
 
-/* Hero Section */
+/* Hero Section - Poveda Style (Full bleed image background with centered elegant serif typography) */
 .lp-hero {
   min-height: 100vh;
   display: flex;
@@ -62,31 +72,44 @@
   justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 6rem 2rem 2rem;
+  padding: 8rem 2rem 4rem;
   position: relative;
   overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .lp-hero::before {
   content: '';
   position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 50%);
-  animation: pulse 10s infinite alternate;
-  z-index: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(7, 10, 19, 0.4) 0%, rgba(7, 10, 19, 0.85) 100%);
+  z-index: 1;
+}
+
+.landing-page.light .lp-hero::before {
+  background: linear-gradient(180deg, rgba(253, 251, 247, 0.3) 0%, rgba(253, 251, 247, 0.9) 100%);
 }
 
 .lp-hero-content {
   position: relative;
-  z-index: 1;
-  max-width: 800px;
+  z-index: 2;
+  max-width: 900px;
 }
 
 .text-gradient {
-  background: linear-gradient(135deg, var(--lp-primary), var(--lp-secondary));
+  background: linear-gradient(135deg, var(--lp-primary), #fff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.landing-page.light .text-gradient {
+  background: linear-gradient(135deg, #b8860b, #1c1917);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -94,141 +117,142 @@
 
 /* Buttons */
 .lp-btn {
-  padding: 0.75rem 1.5rem;
-  border-radius: 9999px;
+  padding: 0.85rem 2rem;
+  border-radius: 4px; /* Crisp square borders characteristic of Poveda template */
   font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
   border: none;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
   text-decoration: none;
 }
 
 .lp-btn-primary {
   background: var(--lp-primary);
-  color: white;
-  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+  color: #070a13;
+  box-shadow: 0 4px 15px rgba(226, 184, 101, 0.2);
 }
 
 .lp-btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
+  background: var(--lp-primary-hover);
+  box-shadow: 0 6px 20px rgba(226, 184, 101, 0.45);
 }
 
 .lp-btn-outline {
   background: transparent;
-  border: 2px solid var(--lp-primary);
+  border: 1px solid var(--lp-primary);
   color: var(--lp-primary);
 }
 
 .lp-btn-outline:hover {
-  background: rgba(99, 102, 241, 0.1);
+  background: rgba(226, 184, 101, 0.08);
+  transform: translateY(-2px);
 }
 
-/* Sections */
+/* Sections - Spacious and elegant */
 .lp-section {
-  padding: 6rem 2rem;
+  padding: 8rem 2rem;
   max-width: 1200px;
   margin: 0 auto;
 }
 
 .lp-section-title {
   text-align: center;
-  font-size: 2.5rem;
-  margin-bottom: 3rem;
-  font-weight: 800;
+  font-size: 3rem;
+  margin-bottom: 4rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
 }
 
-/* Cards */
+/* Image-Centric Poveda Grid */
 .lp-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2.5rem;
 }
 
+/* Full-bleed visual cards */
 .lp-card {
-  padding: 2rem;
-  border-radius: 20px;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 4px;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   border: 1px solid;
+  display: flex;
+  flex-direction: column;
+  background: transparent;
 }
 
 .landing-page.dark .lp-card {
-  background: rgba(255, 255, 255, 0.03);
   border-color: var(--lp-glass-border-dark);
 }
 
 .landing-page.light .lp-card {
-  background: rgba(255, 255, 255, 0.8);
   border-color: var(--lp-glass-border-light);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.02);
 }
 
 .lp-card:hover {
-  transform: translateY(-10px);
+  transform: translateY(-6px);
 }
 
 .landing-page.dark .lp-card:hover {
-  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-  border-color: rgba(99, 102, 241, 0.3);
+  border-color: var(--lp-primary);
+  box-shadow: 0 15px 30px rgba(226, 184, 101, 0.1);
 }
 
 .landing-page.light .lp-card:hover {
-  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-  border-color: rgba(99, 102, 241, 0.3);
+  border-color: #1c1917;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.06);
 }
 
-/* Forms */
+/* Form Styling */
 .lp-input {
   width: 100%;
-  padding: 1rem;
-  border-radius: 12px;
-  margin-bottom: 1rem;
+  padding: 1.1rem;
+  border-radius: 4px;
+  margin-bottom: 1.2rem;
   border: 1px solid;
   transition: all 0.3s ease;
   font-family: inherit;
 }
 
 .landing-page.dark .lp-input {
-  background: rgba(0,0,0,0.2);
+  background: rgba(7, 10, 19, 0.8);
   border-color: var(--lp-glass-border-dark);
   color: white;
 }
 
 .landing-page.light .lp-input {
   background: white;
-  border-color: #e2e8f0;
+  border-color: #d6d3d1;
   color: var(--lp-text-light);
 }
 
 .lp-input:focus {
   outline: none;
   border-color: var(--lp-primary);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+  box-shadow: 0 0 0 3px rgba(226, 184, 101, 0.15);
 }
 
 /* FAQ Accordion */
 .lp-faq-item {
   border-bottom: 1px solid;
-  padding: 1.5rem 0;
+  padding: 1.8rem 0;
   cursor: pointer;
 }
 
-.landing-page.dark .lp-faq-item { border-color: rgba(255,255,255,0.1); }
-.landing-page.light .lp-faq-item { border-color: rgba(0,0,0,0.1); }
-
-/* Animations */
-@keyframes pulse {
-  0% { transform: scale(1); opacity: 0.5; }
-  100% { transform: scale(1.1); opacity: 0.8; }
-}
+.landing-page.dark .lp-faq-item { border-color: var(--lp-glass-border-dark); }
+.landing-page.light .lp-faq-item { border-color: var(--lp-glass-border-light); }
 
 @media (max-width: 768px) {
-  .lp-navbar { padding: 1rem; }
-  .lp-hero-content h1 { font-size: 2.5rem; }
-  .lp-grid { grid-template-columns: 1fr; }
+  .lp-navbar { padding: 1.2rem 1.5rem; }
+  .lp-hero-content h1 { font-size: 2.8rem; }
+  .lp-section-title { font-size: 2.2rem; margin-bottom: 2.5rem; }
+  .lp-section { padding: 5rem 1.5rem; }
 }
