@@ -1,258 +1,304 @@
 /* src/styles/landing.css */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Outfit:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Playball&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 
 :root {
-  --lp-bg-dark: #070a13;
-  --lp-bg-light: #fdfbf7;      /* Warm linen/beige background for light mode */
-  --lp-text-dark: #f8fafc;
-  --lp-text-light: #1c1917;    /* Warm stone charcoal for light mode */
-  --lp-primary: #e2b865;       /* Warm sand gold */
-  --lp-primary-hover: #f1cf8e; /* Lighter sand gold */
-  --lp-secondary: #06b6d4;     /* Accent teal */
-  --lp-glass-dark: rgba(10, 15, 30, 0.7);
-  --lp-glass-light: rgba(253, 251, 247, 0.8);
-  --lp-glass-border-dark: rgba(226, 184, 101, 0.2);
-  --lp-glass-border-light: rgba(28, 25, 23, 0.1);
+  --lp-primary: #00a7b5;       /* Custom Dribbble Cyan/Teal */
+  --lp-primary-hover: #008f9c; /* Darker Cyan */
+  --lp-text-dark: #0f172a;     /* Slate 900 */
+  --lp-text-muted: #64748b;    /* Slate 500 */
+  --lp-bg-light: #ffffff;
+  --lp-bg-alt: #f8fafc;        /* Soft gray for section alternate rows */
+  --lp-border: #e2e8f0;
 }
 
 .landing-page {
-  transition: background-color 0.3s ease, color 0.3s ease;
   font-family: 'Outfit', sans-serif;
+  background-color: var(--lp-bg-light);
+  color: var(--lp-text-dark);
   overflow-x: hidden;
   letter-spacing: -0.01em;
+  scroll-behavior: smooth;
 }
 
-.landing-page.dark {
-  background-color: var(--lp-bg-dark);
-  color: var(--lp-text-dark);
+/* Typography styles */
+.font-script {
+  font-family: 'Playball', cursive;
+  color: var(--lp-primary);
+  font-size: 1.5rem;
+  letter-spacing: 0.02em;
 }
 
-.landing-page.light {
-  background-color: var(--lp-bg-light);
-  color: var(--lp-text-light);
-}
-
-/* Elegant Font Utilities */
 .font-serif {
   font-family: 'Playfair Display', serif;
 }
 
-/* Glassmorphism Navbar */
+/* Header/Navbar styles */
 .lp-navbar {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 100;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  padding: 1.5rem 3rem;
+  padding: 1.5rem 6%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid;
-  transition: all 0.3s ease;
+  z-index: 100;
+  background: transparent;
 }
 
-.landing-page.dark .lp-navbar {
-  background: rgba(7, 10, 19, 0.75);
-  border-color: var(--lp-glass-border-dark);
-}
-
-.landing-page.light .lp-navbar {
-  background: rgba(253, 251, 247, 0.75);
-  border-color: var(--lp-glass-border-light);
-}
-
-/* Hero Section - Poveda Style (Full bleed image background with centered elegant serif typography) */
-.lp-hero {
-  min-height: 100vh;
+.lp-nav-links {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 8rem 2rem 4rem;
-  position: relative;
+  gap: 2rem;
+}
+
+.lp-nav-link {
+  color: var(--lp-text-dark);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: color 0.2s;
+  cursor: pointer;
+}
+
+.lp-nav-link:hover {
+  color: var(--lp-primary);
+}
+
+/* Dribbble Rounded Hero Section */
+.lp-hero-wrapper {
+  padding: 1rem 6%;
+}
+
+.lp-hero-container {
+  height: 90vh;
+  min-height: 600px;
+  border-radius: 32px;
   overflow: hidden;
+  position: relative;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  padding: 0 8%;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
 }
 
-.lp-hero::before {
+.lp-hero-container::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(180deg, rgba(7, 10, 19, 0.4) 0%, rgba(7, 10, 19, 0.85) 100%);
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.45) 50%, rgba(255, 255, 255, 0.1) 100%);
   z-index: 1;
 }
 
-.landing-page.light .lp-hero::before {
-  background: linear-gradient(180deg, rgba(253, 251, 247, 0.3) 0%, rgba(253, 251, 247, 0.9) 100%);
-}
-
-.lp-hero-content {
+.lp-hero-text-block {
   position: relative;
   z-index: 2;
-  max-width: 900px;
+  max-width: 600px;
+  text-align: left;
 }
 
-.text-gradient {
-  background: linear-gradient(135deg, var(--lp-primary), #fff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+/* Floating Booking Search Bar */
+.lp-search-bar {
+  background: white;
+  border-radius: 20px;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--lp-border);
+  position: absolute;
+  bottom: -32px;
+  left: 8%;
+  right: 8%;
+  z-index: 10;
 }
 
-.landing-page.light .text-gradient {
-  background: linear-gradient(135deg, #b8860b, #1c1917);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.search-field {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-right: 1px solid #e2e8f0;
+  padding-right: 20px;
+}
+
+.search-field:last-of-type {
+  border-right: none;
+}
+
+.search-label {
+  font-size: 0.75rem;
+  color: var(--lp-text-muted);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.search-value {
+  font-size: 0.9rem;
+  color: var(--lp-text-dark);
+  font-weight: 600;
+  border: none;
+  background: transparent;
+  outline: none;
+  cursor: pointer;
+  width: 100%;
+}
+
+/* Category grid cards (rounded top/bottom) */
+.category-card {
+  border-radius: 32px 8px 32px 8px;
+  overflow: hidden;
+  background: white;
+  border: 1px solid var(--lp-border);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  text-align: center;
+}
+
+.category-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+  border-color: var(--lp-primary);
+}
+
+/* Popular Tour Card */
+.tour-card {
+  border-radius: 24px;
+  background: white;
+  border: 1px solid var(--lp-border);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.03);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.tour-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+}
+
+/* Offers / Inspiring Grid */
+.offers-grid {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  padding-bottom: 16px;
+}
+
+.offer-card {
+  min-width: 320px;
+  border-radius: 20px;
+  padding: 24px;
+  background: #0f172a;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Blog Article Card */
+.blog-card {
+  border-radius: 20px;
+  background: white;
+  border: 1px solid var(--lp-border);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.blog-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.07);
+}
+
+/* Profile overlaps */
+.profile-group {
+  display: flex;
+  align-items: center;
+}
+
+.profile-img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid white;
+  margin-left: -8px;
+}
+
+.profile-img:first-of-type {
+  margin-left: 0;
 }
 
 /* Buttons */
-.lp-btn {
-  padding: 0.85rem 2rem;
-  border-radius: 4px; /* Crisp square borders characteristic of Poveda template */
-  font-weight: 600;
-  text-transform: uppercase;
-  font-size: 0.8rem;
-  letter-spacing: 0.15em;
+.lp-btn-pill-primary {
+  padding: 12px 28px;
+  border-radius: 50px;
+  background: var(--lp-primary);
+  color: white;
+  font-weight: 700;
   border: none;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.2s;
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
-  text-decoration: none;
+  gap: 8px;
+  font-size: 0.85rem;
 }
 
-.lp-btn-primary {
-  background: var(--lp-primary);
-  color: #070a13;
-  box-shadow: 0 4px 15px rgba(226, 184, 101, 0.2);
-}
-
-.lp-btn-primary:hover {
-  transform: translateY(-2px);
+.lp-btn-pill-primary:hover {
   background: var(--lp-primary-hover);
-  box-shadow: 0 6px 20px rgba(226, 184, 101, 0.45);
+  box-shadow: 0 8px 20px rgba(0, 167, 181, 0.35);
 }
 
-.lp-btn-outline {
+.lp-btn-pill-outline {
+  padding: 12px 28px;
+  border-radius: 50px;
   background: transparent;
-  border: 1px solid var(--lp-primary);
+  border: 1.5px solid var(--lp-primary);
   color: var(--lp-primary);
-}
-
-.lp-btn-outline:hover {
-  background: rgba(226, 184, 101, 0.08);
-  transform: translateY(-2px);
-}
-
-/* Sections - Spacious and elegant */
-.lp-section {
-  padding: 8rem 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.lp-section-title {
-  text-align: center;
-  font-size: 3rem;
-  margin-bottom: 4rem;
-  font-weight: 400;
-  letter-spacing: -0.01em;
-}
-
-/* Image-Centric Poveda Grid */
-.lp-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 2.5rem;
-}
-
-/* Full-bleed visual cards */
-.lp-card {
-  border-radius: 4px;
-  overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  border: 1px solid;
-  display: flex;
-  flex-direction: column;
-  background: transparent;
-}
-
-.landing-page.dark .lp-card {
-  border-color: var(--lp-glass-border-dark);
-}
-
-.landing-page.light .lp-card {
-  border-color: var(--lp-glass-border-light);
-  box-shadow: 0 5px 15px rgba(0,0,0,0.02);
-}
-
-.lp-card:hover {
-  transform: translateY(-6px);
-}
-
-.landing-page.dark .lp-card:hover {
-  border-color: var(--lp-primary);
-  box-shadow: 0 15px 30px rgba(226, 184, 101, 0.1);
-}
-
-.landing-page.light .lp-card:hover {
-  border-color: #1c1917;
-  box-shadow: 0 15px 30px rgba(0,0,0,0.06);
-}
-
-/* Form Styling */
-.lp-input {
-  width: 100%;
-  padding: 1.1rem;
-  border-radius: 4px;
-  margin-bottom: 1.2rem;
-  border: 1px solid;
-  transition: all 0.3s ease;
-  font-family: inherit;
-}
-
-.landing-page.dark .lp-input {
-  background: rgba(7, 10, 19, 0.8);
-  border-color: var(--lp-glass-border-dark);
-  color: white;
-}
-
-.landing-page.light .lp-input {
-  background: white;
-  border-color: #d6d3d1;
-  color: var(--lp-text-light);
-}
-
-.lp-input:focus {
-  outline: none;
-  border-color: var(--lp-primary);
-  box-shadow: 0 0 0 3px rgba(226, 184, 101, 0.15);
-}
-
-/* FAQ Accordion */
-.lp-faq-item {
-  border-bottom: 1px solid;
-  padding: 1.8rem 0;
+  font-weight: 700;
   cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
 }
 
-.landing-page.dark .lp-faq-item { border-color: var(--lp-glass-border-dark); }
-.landing-page.light .lp-faq-item { border-color: var(--lp-glass-border-light); }
+.lp-btn-pill-outline:hover {
+  background: rgba(0, 167, 181, 0.06);
+}
 
-@media (max-width: 768px) {
-  .lp-navbar { padding: 1.2rem 1.5rem; }
-  .lp-hero-content h1 { font-size: 2.8rem; }
-  .lp-section-title { font-size: 2.2rem; margin-bottom: 2.5rem; }
-  .lp-section { padding: 5rem 1.5rem; }
+@media (max-width: 1024px) {
+  .lp-search-bar {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    right: auto;
+    margin-top: 30px;
+    flex-direction: column;
+    border-radius: 20px;
+    gap: 16px;
+  }
+  .search-field {
+    border-right: none;
+    border-bottom: 1px solid #e2e8f0;
+    width: 100%;
+    padding-right: 0;
+    padding-bottom: 12px;
+  }
+  .lp-hero-container {
+    height: auto;
+    padding: 100px 24px 60px;
+  }
+  .lp-nav-links {
+    display: none;
+  }
 }
