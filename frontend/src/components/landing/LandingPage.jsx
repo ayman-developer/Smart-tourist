@@ -123,7 +123,7 @@ const LandingPage = () => {
         <div 
           className="lp-hero-container"
           style={{ 
-            backgroundImage: `url('https://images.unsplash.com/photo-1501555088652-021faa106b9b?w=1600&q=80')`
+            backgroundImage: `url('/assets/dribbble_hero.jpg')`
           }}
         >
           <div className="lp-hero-text-block">
