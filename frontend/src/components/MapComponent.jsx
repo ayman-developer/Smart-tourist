@@ -156,7 +156,7 @@ const MapComponent = ({
   }, [userLocation]);
 
   return (
-    <div style={{ flex: 1, position: 'relative', borderRadius: '24px', overflow: 'hidden', margin: '20px 20px 20px 0', boxShadow: '0 12px 32px rgba(0,0,0,0.3)', border: '1px solid var(--glass-border)' }}>
+    <div style={{ flex: 1, position: 'relative', borderRadius: '24px', overflow: 'hidden', margin: '20px 20px 20px 10px', boxShadow: '0 12px 32px rgba(0,0,0,0.3)', border: '1px solid var(--glass-border)' }}>
       <MapContainer 
         center={mapCenter} 
         zoom={13} 
@@ -188,7 +188,7 @@ const MapComponent = ({
               [userLocation.lat, userLocation.lng],
               ...pointsOfInterest.map(p => [p.lat, p.lng])
             ]} 
-            color="#6366f1" 
+            color="#e2b865" 
             dashArray="8, 12"
             weight={3.5}
             opacity={0.65}

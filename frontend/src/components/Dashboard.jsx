@@ -135,80 +135,93 @@ function Dashboard() {
   }, [userLocation, activeCategory]);
 
   return (
-    <div style={{ display: 'flex', height: '100vh', width: '100vw', background: 'var(--bg-dark)', color: 'white' }}>
-      <Sidebar 
-        activeCategory={activeCategory} 
-        setActiveCategory={setActiveCategory} 
-        userLocation={userLocation}
-        userAddress={userAddress}
-        onOptimizeRoute={handleOptimizeRoute}
-        pois={pois}
-        selectedPoi={selectedPoi}
-        onPoiSelect={setSelectedPoi}
-        hoveredPoi={hoveredPoi}
-        onPoiHover={setHoveredPoi}
-      />
-      
-      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', position: 'relative' }}>
-        {isLoading && pois.length === 0 && (
-          <div style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            zIndex: 2000,
-            background: 'var(--primary)',
-            color: 'white',
-            padding: '12px 24px',
-            borderRadius: '50px',
-            fontWeight: 600,
-            boxShadow: '0 10px 25px rgba(99, 102, 241, 0.4)'
-          }}>
-            Searching for {{
-              petrol: 'Petrol Bunks',
-              hotel: 'Lodges',
-              restaurant: 'Restaurants',
-              mechanic: 'Mechanic Shops',
-              tourist: 'Tourist Places',
-              hospital: 'Hospitals & Clinics',
-              atm: 'ATMs & Banks',
-              transit: 'Transit Hubs'
-            }[activeCategory] || activeCategory}...
-          </div>
-        )}
-        
-        <button 
-          onClick={handleRefreshLocation}
-          style={{
-            position: 'absolute',
-            top: '40px',
-            right: '40px',
-            zIndex: 1000,
-            background: 'var(--glass-bg)',
-            color: 'white',
-            border: '1px solid var(--glass-border)',
-            padding: '10px 16px',
-            borderRadius: '12px',
-            backdropFilter: 'blur(10px)',
-            cursor: 'pointer',
-            fontWeight: 600,
-            boxShadow: 'var(--shadow-lg)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px'
-          }}
-        >
-          📍 Refresh Location
-        </button>
-        <MapComponent 
-          userLocation={userLocation} 
-          pointsOfInterest={pois} 
+    <div style={{ display: 'flex', height: '100vh', width: '100vw', background: 'var(--bg-dark)', color: 'white', position: 'relative', overflow: 'hidden' }}>
+      {/* Background Glowing Blobs for Dribbble Mesh Gradient */}
+      <div className="glowing-blob blob-purple"></div>
+      <div className="glowing-blob blob-teal"></div>
+      <div className="glowing-blob blob-pink"></div>
+
+      {/* Main Glassmorphic Dashboard Layout */}
+      <div style={{ display: 'flex', width: '100%', height: '100%', position: 'relative', zIndex: 1 }}>
+        <Sidebar 
+          activeCategory={activeCategory} 
+          setActiveCategory={setActiveCategory} 
+          userLocation={userLocation}
+          userAddress={userAddress}
+          onOptimizeRoute={handleOptimizeRoute}
+          pois={pois}
           selectedPoi={selectedPoi}
-          setSelectedPoi={setSelectedPoi}
+          onPoiSelect={setSelectedPoi}
           hoveredPoi={hoveredPoi}
-          activeCategory={activeCategory}
+          onPoiHover={setHoveredPoi}
         />
-      </main>
+        
+        <main style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', position: 'relative' }}>
+          {isLoading && pois.length === 0 && (
+            <div style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              zIndex: 2000,
+              background: 'var(--primary)',
+              color: '#070a13',
+              padding: '12px 24px',
+              borderRadius: '50px',
+              fontWeight: 700,
+              boxShadow: '0 10px 25px rgba(226, 184, 101, 0.4)'
+            }}>
+              Searching for {{
+                petrol: 'Petrol Bunks',
+                hotel: 'Lodges',
+                restaurant: 'Restaurants',
+                mechanic: 'Mechanic Shops',
+                tourist: 'Tourist Places',
+                hospital: 'Hospitals & Clinics',
+                atm: 'ATMs & Banks',
+                transit: 'Transit Hubs'
+              }[activeCategory] || activeCategory}...
+            </div>
+          )}
+          
+          <button 
+            onClick={handleRefreshLocation}
+            style={{
+              position: 'absolute',
+              top: '40px',
+              right: '40px',
+              zIndex: 1000,
+              background: 'rgba(10, 15, 30, 0.65)',
+              color: 'white',
+              border: '1px solid var(--glass-border)',
+              padding: '10px 18px',
+              borderRadius: '20px',
+              backdropFilter: 'blur(10px)',
+              cursor: 'pointer',
+              fontWeight: 700,
+              fontSize: '0.8rem',
+              boxShadow: 'var(--shadow-lg)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              transition: 'all 0.2s'
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
+            onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+          >
+            📍 Refresh Location
+          </button>
+          
+          <MapComponent 
+            userLocation={userLocation} 
+            pointsOfInterest={pois} 
+            selectedPoi={selectedPoi}
+            setSelectedPoi={setSelectedPoi}
+            hoveredPoi={hoveredPoi}
+            activeCategory={activeCategory}
+          />
+        </main>
+      </div>
 
       <Chatbot />
     </div>
