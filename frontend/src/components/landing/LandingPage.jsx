@@ -5,7 +5,7 @@ import {
   MapPin, Compass, Navigation, Sun, Moon, 
   Shield, Zap, Star, ChevronDown, CheckCircle, 
   Mail, ArrowRight, Phone, HeartPulse, Wrench,
-  Search, ListChecks
+  Search, ListChecks, DollarSign
 } from 'lucide-react';
 import '../../styles/landing.css';
 
