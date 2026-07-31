@@ -150,6 +150,10 @@ export const getNearbyPlaces = async (lat, lng, category) => {
       body: query
     });
     const data = await response.json();
+    if (!data || !data.elements) {
+      console.warn("Invalid data returned from Overpass proxy:", data);
+      return [];
+    }
     
     const mapped = data.elements.map((element, idx) => {
       const tags = element.tags || {};
@@ -202,37 +206,50 @@ export const getNearbyPlaces = async (lat, lng, category) => {
                    (detectedBrand ? detectedBrand.name : null) ||
                    defaultName);
       
-      // Global rename for Hindustan Petroleum variations
-      name = name.replace(/Hindustan Petroleum/gi, 'HP Petroleum');
-      name = name.replace(/Hindustan/gi, 'HP Petroleum');
-      if (name.toLowerCase() === 'hp' || name.toLowerCase() === 'hpcl') {
-        name = 'HP Petroleum';
-      }
+      if (category === 'petrol') {
+        // Global rename for Hindustan Petroleum variations
+        name = name.replace(/Hindustan Petroleum/gi, 'HP Petroleum');
+        name = name.replace(/Hindustan/gi, 'HP Petroleum');
+        if (name.toLowerCase() === 'hp' || name.toLowerCase() === 'hpcl') {
+          name = 'HP Petroleum';
+        }
 
-      // Global rename for Bharat Petroleum variations
-      if (name.toLowerCase().includes('bharat') || name.toLowerCase() === 'bp' || name.toLowerCase() === 'bpcl' || name.toLowerCase().includes('sundaram')) {
-        name = 'Bharat Petroleum';
+        // Global rename for Bharat Petroleum variations
+        if (name.toLowerCase().includes('bharat') || name.toLowerCase() === 'bp' || name.toLowerCase() === 'bpcl' || name.toLowerCase().includes('sundaram')) {
+          name = 'Bharat Petroleum';
+        }
       }
 
       const id = element.id;
-      let searchTags = `${category},station`;
-      
-      // Try to find a brand match in the name or tags for imagery
-      const lowerName = name.toLowerCase();
-      const matchedBrand = detectedBrand || brands.find(b => 
-        lowerName.includes(b.key)
-      );
-      
-      if (matchedBrand) {
-        searchTags = matchedBrand.tags;
-      } else {
-        // Fallback to name if it's descriptive
-        searchTags = `${category},${name.replace(/\s+/g, ',')}`;
-      }
-
       const pLat = element.lat || (element.center && element.center.lat);
       const pLng = element.lon || (element.center && element.center.lon);
       const dist = calculateDistance(lat, lng, pLat, pLng);
+
+      let imageUrl = '';
+      if (category === 'petrol') {
+        const lowerName = name.toLowerCase();
+        if (lowerName.includes('bharat') || lowerName.includes('bpcl')) {
+          imageUrl = '/assets/images/bharat_petroleum.jpg';
+        } else if (lowerName.includes('hp') || lowerName.includes('hindustan')) {
+          imageUrl = '/assets/images/hp_petrol.jpg';
+        } else if (lowerName.includes('indian oil') || lowerName.includes('iocl')) {
+          imageUrl = '/assets/images/indian_oil.jpg';
+        } else {
+          imageUrl = `https://loremflickr.com/400/250/gas_station?lock=${id % 100}`;
+        }
+      } else {
+        const imageCategoryMap = {
+          hotel: 'hotel,room',
+          restaurant: 'restaurant,food',
+          mechanic: 'mechanic,garage',
+          tourist: 'sightseeing,monument',
+          hospital: 'hospital,clinic',
+          atm: 'bank,atm',
+          transit: 'bus_station,train_station'
+        };
+        const imgCat = imageCategoryMap[category] || category;
+        imageUrl = `https://loremflickr.com/400/250/${imgCat}?lock=${id % 100}`;
+      }
 
       return {
         id,
@@ -242,10 +259,7 @@ export const getNearbyPlaces = async (lat, lng, category) => {
         address: tags['addr:full'] || tags['addr:street'] || tags['addr:place'] || 'Address available in navigation',
         rating: (Math.random() * 2 + 3).toFixed(1),
         distance: parseFloat(dist.toFixed(1)),
-        image: (name.toLowerCase().includes('bharat') || name.toLowerCase().includes('bpcl')) ? '/assets/images/bharat_petroleum.jpg' : 
-               (name.toLowerCase().includes('hp') || name.toLowerCase().includes('hindustan')) ? '/assets/images/hp_petrol.jpg' :
-               (name.toLowerCase().includes('indian oil') || name.toLowerCase().includes('iocl')) ? '/assets/images/indian_oil.jpg' :
-               `https://loremflickr.com/400/250/${searchTags}?lock=${id % 1000}`
+        image: imageUrl
       };
     });
 

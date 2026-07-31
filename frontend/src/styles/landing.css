@@ -1,14 +1,14 @@
 /* src/styles/landing.css */
 :root {
-  --lp-bg-dark: #0f172a;
+  --lp-bg-dark: #070a13;
   --lp-bg-light: #f8fafc;
   --lp-text-dark: #f8fafc;
-  --lp-text-light: #0f172a;
-  --lp-primary: #6366f1;
-  --lp-secondary: #ec4899;
-  --lp-glass-dark: rgba(15, 23, 42, 0.7);
+  --lp-text-light: #070a13;
+  --lp-primary: #a855f7;
+  --lp-secondary: #06b6d4;
+  --lp-glass-dark: rgba(10, 15, 30, 0.7);
   --lp-glass-light: rgba(255, 255, 255, 0.7);
-  --lp-glass-border-dark: rgba(255, 255, 255, 0.1);
+  --lp-glass-border-dark: rgba(168, 85, 247, 0.18);
   --lp-glass-border-light: rgba(0, 0, 0, 0.1);
 }
 
