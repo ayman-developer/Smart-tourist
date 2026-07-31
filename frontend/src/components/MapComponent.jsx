@@ -6,32 +6,21 @@ import 'leaflet/dist/leaflet.css';
 // Fix default marker icon shadow URL
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
-// Generate custom SVG markers for different categories
+// Generate custom SVG markers for different categories (cohesive sand-gold)
 const getMarkerIcon = (category, isSelected = false, isHovered = false) => {
-  const categoryColors = {
-    petrol: '#f59e0b',
-    hotel: '#3b82f6',
-    restaurant: '#10b981',
-    mechanic: '#6366f1',
-    tourist: '#ec4899',
-    hospital: '#f43f5e',
-    atm: '#06b6d4',
-    transit: '#e11d48'
-  };
-
-  const color = categoryColors[category] || '#6366f1';
-  const size = isSelected ? 40 : (isHovered ? 36 : 30);
-  const strokeColor = isSelected ? '#f59e0b' : 'white';
+  const color = '#e2b865'; // Cohesive Sand Gold
+  const size = isSelected ? 38 : (isHovered ? 34 : 28);
+  const strokeColor = isSelected ? 'white' : '#070a13';
   const strokeWidth = isSelected ? 2.5 : 1.5;
   const shadow = isSelected 
-    ? 'filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.8));' 
-    : (isHovered ? 'filter: drop-shadow(0 0 6px rgba(255,255,255,0.5));' : '');
+    ? 'filter: drop-shadow(0 0 10px rgba(226, 184, 101, 0.85));' 
+    : (isHovered ? 'filter: drop-shadow(0 0 6px rgba(226, 184, 101, 0.5));' : '');
 
   return new L.DivIcon({
     html: `<div style="${shadow} display: flex; align-items: center; justify-content: center;">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="${color}" width="${size}" height="${size}" stroke="${strokeColor}" stroke-width="${strokeWidth}" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin">
         <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
-        <circle cx="12" cy="10" r="3" fill="white"/>
+        <circle cx="12" cy="10" r="3.5" fill="#070a13"/>
       </svg>
     </div>`,
     className: 'custom-map-pin',
