@@ -3,10 +3,30 @@ export const getAddressFromCoords = async (lat, lng) => {
   try {
     const response = await fetch(`/api/geocode?lat=${lat}&lng=${lng}`);
     const data = await response.json();
-    return data.display_name || "Unknown Location";
+    
+    const addr = data.address || {};
+    const local = addr.suburb || addr.neighbourhood || addr.quarter || addr.village || addr.town || "";
+    const city = addr.city || addr.town || addr.village || addr.county || "";
+    let short = "";
+    if (local && city && local.toLowerCase() !== city.toLowerCase()) {
+      short = `${local}, ${city}`;
+    } else {
+      short = local || city || data.display_name || "Location detected";
+      if (short.length > 30) {
+        short = short.split(',').slice(0, 2).join(',').trim();
+      }
+    }
+
+    return {
+      full: data.display_name || "Unknown Location",
+      short: short
+    };
   } catch (error) {
     console.error("Geocoding error:", error);
-    return "Location detected";
+    return {
+      full: "Location detected",
+      short: "Location detected"
+    };
   }
 };
 
@@ -58,11 +78,11 @@ export const getNearbyPlaces = async (lat, lng, category) => {
     hotel: 'tourism=hotel',
     restaurant: 'amenity=restaurant',
     mechanic: 'amenity=car_repair',
-    tourist: 'tourism' // Broad tourism search
+    tourist: 'tourism'
   };
 
   const tag = categoryMap[category] || 'amenity=fuel';
-  const radius = 4000; // 4km radius
+  const radius = category === 'tourist' ? 45000 : 4000; // 45km for tourist places, 4km for others
 
   let extraNodes = '';
   if (category === 'hotel') {
@@ -83,12 +103,17 @@ export const getNearbyPlaces = async (lat, lng, category) => {
     `;
   }
 
+  // Optimize tag query for tourist category to avoid timeouts and generic items
+  const tagQuery = category === 'tourist' 
+    ? '"tourism"~"attraction|museum|viewpoint|theme_park|zoo|aquarium|gallery|picnic_site"' 
+    : tag;
+
   // Overpass QL query
   const query = `
     [out:json];
     (
-      node[${tag}](around:${radius},${lat},${lng});
-      way[${tag}](around:${radius},${lat},${lng});${extraNodes}
+      node[${tagQuery}](around:${radius},${lat},${lng});
+      way[${tagQuery}](around:${radius},${lat},${lng});${extraNodes}
     );
     out center;
   `;
@@ -195,8 +220,9 @@ export const getNearbyPlaces = async (lat, lng, category) => {
       };
     });
 
-    // Filter strictly within 4.0 km radius
-    return mapped.filter(item => item.distance <= 4.0);
+    // Filter strictly within the radius limit (45km for tourist places, 4km for others)
+    const maxFilterDistance = category === 'tourist' ? 45.0 : 4.0;
+    return mapped.filter(item => item.distance <= maxFilterDistance);
   } catch (error) {
     console.error("Overpass API error:", error);
     return [];

@@ -46,23 +46,43 @@ app.get('/api/weather', async (req, res) => {
   }
 });
 
+const overpassInstances = [
+  'https://overpass-api.de/api/interpreter',
+  'https://overpass.kumi.systems/api/interpreter',
+  'https://overpass.n.openstreetmap.de/api/interpreter'
+];
+
 // Overpass API proxy endpoint
 app.post('/api/places', async (req, res) => {
   const query = req.body;
   if (!query) {
     return res.status(400).json({ error: 'Overpass query is required' });
   }
-  try {
-    const response = await fetch('https://overpass-api.de/api/interpreter', {
-      method: 'POST',
-      body: query
-    });
-    const data = await response.json();
-    res.json(data);
-  } catch (error) {
-    console.error('Overpass API error:', error);
-    res.status(500).json({ error: 'Failed to fetch nearby places' });
+
+  for (const url of overpassInstances) {
+    try {
+      console.log(`Trying Overpass instance: ${url}`);
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'User-Agent': 'SmartTouristAssistant/1.0'
+        },
+        body: `data=${encodeURIComponent(query)}`
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log(`Successfully fetched from ${url}`);
+        return res.json(data);
+      }
+      console.warn(`Instance ${url} returned status: ${response.status}`);
+    } catch (err) {
+      console.error(`Failed to fetch from ${url}:`, err.message);
+    }
   }
+
+  res.status(502).json({ error: 'All public Overpass API instances timed out or failed.' });
 });
 
 app.listen(PORT, () => {

@@ -9,7 +9,19 @@ function Dashboard() {
     const saved = localStorage.getItem('userLocation');
     return saved ? JSON.parse(saved) : { lat: 12.9716, lng: 77.5946 };
   });
-  const [userAddress, setUserAddress] = useState(() => localStorage.getItem('userAddress') || "Detecting location...");
+  const [userAddress, setUserAddress] = useState(() => {
+    const saved = localStorage.getItem('userAddress');
+    if (!saved) return { full: "Detecting location...", short: "Detecting location..." };
+    try {
+      const parsed = JSON.parse(saved);
+      if (parsed && typeof parsed === 'object' && parsed.full) {
+        return parsed;
+      }
+      return { full: saved, short: saved };
+    } catch {
+      return { full: saved, short: saved };
+    }
+  });
   const [activeCategory, setActiveCategory] = useState(() => localStorage.getItem('lastCategory') || 'tourist');
   const [pois, setPois] = useState(() => {
     const saved = localStorage.getItem(`pois_${activeCategory}`);
@@ -48,7 +60,7 @@ function Dashboard() {
           localStorage.setItem('userLocation', JSON.stringify(loc));
           const addr = await getAddressFromCoords(loc.lat, loc.lng);
           setUserAddress(addr);
-          localStorage.setItem('userAddress', addr);
+          localStorage.setItem('userAddress', JSON.stringify(addr));
         },
         (error) => alert("Please enable location permissions to see your current area.")
       );
@@ -95,10 +107,11 @@ function Dashboard() {
         const cached = localStorage.getItem(`pois_${activeCategory}`);
         if (cached) {
           const parsed = JSON.parse(cached);
-          // Check if cached items are within 4 km of userLocation
+          // Check if cached items are within limits (45 km for tourist, 4 km for others)
+          const maxDist = activeCategory === 'tourist' ? 45.0 : 4.0;
           const isLocal = parsed.length > 0 && parsed.every(p => {
             const dist = calculateDistance(userLocation.lat, userLocation.lng, p.lat, p.lng);
-            return dist <= 4.0;
+            return dist <= maxDist;
           });
           if (isLocal) {
             setPois(parsed);

@@ -40,6 +40,10 @@ const WeatherWidget = ({ location, address }) => {
     );
   }
 
+  const displayAddress = typeof address === 'object' && address !== null
+    ? (address.short || address.full || 'Detecting address...')
+    : (address || 'Detecting address...');
+
   return (
     <div className="glass-card" style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -47,8 +51,19 @@ const WeatherWidget = ({ location, address }) => {
           <h3 style={{ fontSize: '1.25rem', fontWeight: 700 }}>{weather.temp}°C</h3>
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: '4px', marginTop: '4px' }}>
             <MapPin size={12} color="var(--accent)" style={{ marginTop: '2px', flexShrink: 0 }} />
-            <p style={{ fontSize: '0.65rem', color: 'var(--text-muted)', lineHeight: '1.2', fontWeight: 500 }}>
-              {address || 'Detecting address...'}
+            <p style={{ 
+              fontSize: '0.65rem', 
+              color: 'var(--text-muted)', 
+              lineHeight: '1.2', 
+              fontWeight: 500,
+              maxHeight: '2.4em',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical'
+            }}>
+              {displayAddress}
             </p>
           </div>
         </div>
