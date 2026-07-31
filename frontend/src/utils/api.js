@@ -78,7 +78,10 @@ export const getNearbyPlaces = async (lat, lng, category) => {
     hotel: 'tourism=hotel',
     restaurant: 'amenity=restaurant',
     mechanic: 'amenity=car_repair',
-    tourist: 'tourism'
+    tourist: 'tourism',
+    hospital: 'amenity=hospital',
+    atm: 'amenity=atm',
+    transit: 'amenity=bus_station'
   };
 
   const tag = categoryMap[category] || 'amenity=fuel';
@@ -100,6 +103,26 @@ export const getNearbyPlaces = async (lat, lng, category) => {
       node["building"="hotel"](around:${radius},${lat},${lng});
       node["name"~"lodge|hotel|inn|resort|residency",i](around:${radius},${lat},${lng});
       way["name"~"lodge|hotel|inn|resort|residency",i](around:${radius},${lat},${lng});
+    `;
+  } else if (category === 'hospital') {
+    extraNodes = `
+      node["amenity"="pharmacy"](around:${radius},${lat},${lng});
+      way["amenity"="pharmacy"](around:${radius},${lat},${lng});
+      node["amenity"="clinic"](around:${radius},${lat},${lng});
+      way["amenity"="clinic"](around:${radius},${lat},${lng});
+      node["amenity"="doctors"](around:${radius},${lat},${lng});
+    `;
+  } else if (category === 'atm') {
+    extraNodes = `
+      node["amenity"="bank"](around:${radius},${lat},${lng});
+      way["amenity"="bank"](around:${radius},${lat},${lng});
+    `;
+  } else if (category === 'transit') {
+    extraNodes = `
+      node["railway"="station"](around:${radius},${lat},${lng});
+      way["railway"="station"](around:${radius},${lat},${lng});
+      node["amenity"="taxi"](around:${radius},${lat},${lng});
+      node["highway"="bus_stop"](around:${radius},${lat},${lng});
     `;
   }
 
@@ -164,6 +187,12 @@ export const getNearbyPlaces = async (lat, lng, category) => {
       const rawName = tags.name || tags['name:en'] || tags.short_name || tags.official_name;
       const isGenericName = !rawName || rawName.toLowerCase() === 'petrol station' || rawName.toLowerCase() === 'fuel';
       
+      let defaultName = `${category.charAt(0).toUpperCase() + category.slice(1)} Spot`;
+      if (category === 'petrol') defaultName = 'Bharat Petrol Bunk';
+      else if (category === 'hospital') defaultName = tags.amenity === 'pharmacy' ? 'Local Pharmacy' : 'Medical Center';
+      else if (category === 'atm') defaultName = tags.amenity === 'atm' ? 'ATM Cashpoint' : 'Bank Branch';
+      else if (category === 'transit') defaultName = tags.railway === 'station' ? 'Railway Station' : 'Bus Stop';
+
       let name = (isGenericName && detectedBrand) ? detectedBrand.name :
                    (rawName || 
                    tags.brand || 
@@ -171,7 +200,7 @@ export const getNearbyPlaces = async (lat, lng, category) => {
                    tags['brand:en'] || 
                    tags['operator:en'] || 
                    (detectedBrand ? detectedBrand.name : null) ||
-                   (category === 'petrol' ? 'Bharat Petrol Bunk' : `${category.charAt(0).toUpperCase() + category.slice(1)} Station`));
+                   defaultName);
       
       // Global rename for Hindustan Petroleum variations
       name = name.replace(/Hindustan Petroleum/gi, 'HP Petroleum');

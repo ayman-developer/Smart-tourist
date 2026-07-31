@@ -3,33 +3,74 @@ import { MapContainer, TileLayer, Marker, Popup, useMap, Polyline } from 'react-
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-// Fix for default marker icons in Leaflet with React
-import icon from 'leaflet/dist/images/marker-icon.png';
+// Fix default marker icon shadow URL
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
-let DefaultIcon = L.icon({
-    iconUrl: icon,
-    shadowUrl: iconShadow,
-    iconSize: [25, 41],
-    iconAnchor: [12, 41]
-});
+// Generate custom SVG markers for different categories
+const getMarkerIcon = (category, isSelected = false, isHovered = false) => {
+  const categoryColors = {
+    petrol: '#f59e0b',
+    hotel: '#3b82f6',
+    restaurant: '#10b981',
+    mechanic: '#6366f1',
+    tourist: '#ec4899',
+    hospital: '#f43f5e',
+    atm: '#06b6d4',
+    transit: '#e11d48'
+  };
 
-let UserIcon = L.icon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-    shadowUrl: iconShadow,
-    iconSize: [25, 41],
-    iconAnchor: [12, 41]
-});
+  const color = categoryColors[category] || '#6366f1';
+  const size = isSelected ? 40 : (isHovered ? 36 : 30);
+  const strokeColor = isSelected ? '#f59e0b' : 'white';
+  const strokeWidth = isSelected ? 2.5 : 1.5;
+  const shadow = isSelected 
+    ? 'filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.8));' 
+    : (isHovered ? 'filter: drop-shadow(0 0 6px rgba(255,255,255,0.5));' : '');
 
-L.Marker.prototype.options.icon = DefaultIcon;
+  return new L.DivIcon({
+    html: `<div style="${shadow} display: flex; align-items: center; justify-content: center;">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="${color}" width="${size}" height="${size}" stroke="${strokeColor}" stroke-width="${strokeWidth}" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin">
+        <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
+        <circle cx="12" cy="10" r="3" fill="white"/>
+      </svg>
+    </div>`,
+    className: 'custom-map-pin',
+    iconSize: [size, size],
+    iconAnchor: [size / 2, size],
+    popupAnchor: [0, -size]
+  });
+};
 
-// Custom hook to update map view
-function ChangeView({ center }) {
+// Custom User Pin Icon
+const getUserIcon = () => {
+  return new L.DivIcon({
+    html: `<div style="filter: drop-shadow(0 0 8px rgba(244, 63, 94, 0.8));">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#f43f5e" width="34" height="34" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10" fill="rgba(244,63,94,0.3)"/>
+        <circle cx="12" cy="12" r="6" fill="#f43f5e" stroke="white" stroke-width="2"/>
+      </svg>
+    </div>`,
+    className: 'user-map-pin',
+    iconSize: [34, 34],
+    iconAnchor: [17, 17]
+  });
+};
+
+// Map Controller for auto-panning and zooming when items are selected
+function MapController({ selectedPoi }) {
   const map = useMap();
-  map.setView(center, 13);
+  useEffect(() => {
+    if (selectedPoi) {
+      map.setView([selectedPoi.lat, selectedPoi.lng], 15, {
+        animate: true,
+        duration: 1.2
+      });
+    }
+  }, [selectedPoi, map]);
   return null;
 }
 
+// POI Popup content component
 const POIPopupContent = ({ poi, userLocation }) => {
   const [address, setAddress] = useState(poi.address);
   const [loading, setLoading] = useState(false);
@@ -57,28 +98,28 @@ const POIPopupContent = ({ poi, userLocation }) => {
   }, [poi]);
 
   return (
-    <div style={{ padding: '4px' }}>
+    <div style={{ padding: '6px', minWidth: '220px' }}>
       <img 
         src={poi.image} 
         alt={poi.name}
-        style={{ width: '100%', height: '120px', objectFit: 'cover', borderRadius: '8px', marginBottom: '8px' }}
+        style={{ width: '100%', height: '110px', objectFit: 'cover', borderRadius: '8px', marginBottom: '8px' }}
       />
-      <h4 style={{ margin: '0 0 4px 0', color: 'var(--primary)', fontSize: '1rem', fontWeight: 700 }}>{poi.name}</h4>
+      <h4 style={{ margin: '0 0 6px 0', color: 'white', fontSize: '0.95rem', fontWeight: 800 }}>{poi.name}</h4>
+      
       <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '8px', flexWrap: 'wrap' }}>
-        <span style={{ background: '#f59e0b', color: 'white', padding: '2px 6px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 700 }}>
+        <span style={{ background: '#f59e0b', color: 'white', padding: '2px 6px', borderRadius: '4px', fontSize: '0.65rem', fontWeight: 700 }}>
           ★ {poi.rating}
         </span>
-        <span style={{ fontSize: '0.75rem', color: '#666' }}>({Math.floor(Math.random() * 200)} reviews)</span>
         {poi.distance !== undefined && (
-          <span style={{ background: '#6366f1', color: 'white', padding: '2px 6px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 700, marginLeft: 'auto' }}>
+          <span style={{ background: 'var(--primary)', color: 'white', padding: '2px 6px', borderRadius: '4px', fontSize: '0.65rem', fontWeight: 700 }}>
             {poi.distance} km away
           </span>
         )}
       </div>
       
       <div style={{ marginBottom: '12px' }}>
-        <p style={{ margin: '0', fontSize: '0.75rem', color: '#444', fontWeight: 600 }}>Address:</p>
-        <p style={{ margin: '0', fontSize: '0.75rem', color: '#666' }}>
+        <p style={{ margin: '0 0 2px 0', fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 600 }}>Address:</p>
+        <p style={{ margin: '0', fontSize: '0.75rem', color: '#cbd5e1', lineHeight: '1.3' }}>
           {loading ? 'Fetching location details...' : address}
         </p>
       </div>
@@ -94,36 +135,30 @@ const POIPopupContent = ({ poi, userLocation }) => {
             background: 'var(--primary)', 
             color: 'white', 
             border: 'none', 
-            padding: '8px', 
+            padding: '8px 12px', 
             borderRadius: '8px',
             fontSize: '0.75rem',
-            fontWeight: 600,
-            cursor: 'pointer'
+            fontWeight: 700,
+            cursor: 'pointer',
+            boxShadow: '0 2px 6px rgba(99, 102, 241, 0.3)'
           }}
         >
-          Get Directions
-        </button>
-        <button 
-          style={{ 
-            background: '#f1f5f9', 
-            color: '#1e293b', 
-            border: '1px solid #e2e8f0', 
-            padding: '8px', 
-            borderRadius: '8px',
-            fontSize: '0.75rem',
-            fontWeight: 600,
-            cursor: 'pointer'
-          }}
-        >
-          Call
+          Directions
         </button>
       </div>
     </div>
   );
 };
 
-const MapComponent = ({ userLocation, pointsOfInterest }) => {
-  const [mapCenter, setMapCenter] = useState([12.9716, 77.5946]); // Default: Bangalore
+const MapComponent = ({ 
+  userLocation, 
+  pointsOfInterest = [], 
+  selectedPoi, 
+  setSelectedPoi, 
+  hoveredPoi, 
+  activeCategory 
+}) => {
+  const [mapCenter, setMapCenter] = useState([12.9716, 77.5946]); // Bangalore default
 
   useEffect(() => {
     if (userLocation) {
@@ -132,7 +167,7 @@ const MapComponent = ({ userLocation, pointsOfInterest }) => {
   }, [userLocation]);
 
   return (
-    <div style={{ flex: 1, position: 'relative', borderRadius: '20px', overflow: 'hidden', margin: '20px 20px 20px 0' }}>
+    <div style={{ flex: 1, position: 'relative', borderRadius: '24px', overflow: 'hidden', margin: '20px 20px 20px 0', boxShadow: '0 12px 32px rgba(0,0,0,0.3)', border: '1px solid var(--glass-border)' }}>
       <MapContainer 
         center={mapCenter} 
         zoom={13} 
@@ -140,43 +175,68 @@ const MapComponent = ({ userLocation, pointsOfInterest }) => {
         style={{ height: '100%', width: '100%' }}
         attributionControl={false}
       >
+        {/* Sleek Dark Mode Tiles */}
         <TileLayer
           attribution=""
           url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
         />
         
+        {/* User Location Pin */}
         {userLocation && (
-          <Marker position={[userLocation.lat, userLocation.lng]} icon={UserIcon}>
+          <Marker position={[userLocation.lat, userLocation.lng]} icon={getUserIcon()}>
             <Popup>
-              <div style={{ color: '#333', fontWeight: 600 }}>
-                You are here
+              <div style={{ color: 'white', fontWeight: 700, fontSize: '0.85rem' }}>
+                📍 You are here
               </div>
             </Popup>
           </Marker>
         )}
 
-        {pointsOfInterest.length > 0 && (
+        {/* Route connecting line */}
+        {pointsOfInterest.length > 0 && userLocation && (
           <Polyline 
             positions={[
               [userLocation.lat, userLocation.lng],
               ...pointsOfInterest.map(p => [p.lat, p.lng])
             ]} 
             color="#6366f1" 
-            dashArray="10, 10"
-            weight={3}
-            opacity={0.4}
+            dashArray="8, 12"
+            weight={3.5}
+            opacity={0.65}
           />
         )}
 
-        {pointsOfInterest.map((poi, idx) => (
-          <Marker key={idx} position={[poi.lat, poi.lng]}>
-            <Popup maxWidth={300}>
-              <POIPopupContent poi={poi} userLocation={userLocation} />
-            </Popup>
-          </Marker>
-        ))}
+        {/* Points of Interest pins */}
+        {pointsOfInterest.map((poi) => {
+          const isSelected = selectedPoi?.id === poi.id;
+          const isHovered = hoveredPoi?.id === poi.id;
+          return (
+            <Marker 
+              key={poi.id} 
+              position={[poi.lat, poi.lng]}
+              icon={getMarkerIcon(activeCategory, isSelected, isHovered)}
+              eventHandlers={{
+                click: () => {
+                  setSelectedPoi(poi);
+                }
+              }}
+            />
+          );
+        })}
 
-        <ChangeView center={mapCenter} />
+        {/* Active popup rendering anchored to selected POI */}
+        {selectedPoi && (
+          <Popup 
+            position={[selectedPoi.lat, selectedPoi.lng]} 
+            onClose={() => setSelectedPoi(null)}
+            maxWidth={300}
+          >
+            <POIPopupContent poi={selectedPoi} userLocation={userLocation} />
+          </Popup>
+        )}
+
+        {/* Auto panning/zooming helper */}
+        <MapController selectedPoi={selectedPoi} />
       </MapContainer>
     </div>
   );

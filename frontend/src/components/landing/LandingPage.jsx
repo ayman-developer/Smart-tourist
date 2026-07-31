@@ -162,8 +162,8 @@ const LandingPage = () => {
         <div className="lp-grid">
           {[
             { icon: HeartPulse, title: 'Nearby Hospitals', color: '#f43f5e', desc: 'Instantly locate emergency medical services and pharmacies in your immediate vicinity.' },
-            { icon: Shield, title: 'Police Stations', color: '#3b82f6', desc: 'Find local law enforcement outposts quickly for safety and reporting.' },
-            { icon: Wrench, title: 'Mechanic Shops', color: '#f59e0b', desc: 'Vehicle breakdown? Find verified mechanics and towing services in one click.' }
+            { icon: DollarSign, title: 'ATMs & Banks', color: '#06b6d4', desc: 'Need cash or banking services? Locate them immediately along your travel route.' },
+            { icon: Wrench, title: 'Mechanic Repair', color: '#6366f1', desc: 'Vehicle breakdown? Find verified mechanics and towing services in one click.' }
           ].map((item, idx) => (
             <div key={idx} className="lp-card" style={{ borderTop: `4px solid ${item.color}` }}>
               <item.icon size={32} color={item.color} style={{ marginBottom: '1rem' }} />

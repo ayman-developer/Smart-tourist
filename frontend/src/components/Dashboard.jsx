@@ -28,16 +28,21 @@ function Dashboard() {
     return saved ? JSON.parse(saved) : [];
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedPoi, setSelectedPoi] = useState(null);
+  const [hoveredPoi, setHoveredPoi] = useState(null);
 
   // Force clear cache once for new naming logic
   useEffect(() => {
-    const version = '11.0';
+    const version = '12.0';
     if (localStorage.getItem('app_version') !== version) {
       localStorage.removeItem('pois_petrol');
       localStorage.removeItem('pois_tourist');
       localStorage.removeItem('pois_hotel');
       localStorage.removeItem('pois_restaurant');
       localStorage.removeItem('pois_mechanic');
+      localStorage.removeItem('pois_hospital');
+      localStorage.removeItem('pois_atm');
+      localStorage.removeItem('pois_transit');
       localStorage.setItem('app_version', version);
       window.location.reload();
     }
@@ -137,6 +142,11 @@ function Dashboard() {
         userLocation={userLocation}
         userAddress={userAddress}
         onOptimizeRoute={handleOptimizeRoute}
+        pois={pois}
+        selectedPoi={selectedPoi}
+        onPoiSelect={setSelectedPoi}
+        hoveredPoi={hoveredPoi}
+        onPoiHover={setHoveredPoi}
       />
       
       <main style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', position: 'relative' }}>
@@ -159,7 +169,10 @@ function Dashboard() {
               hotel: 'Lodges',
               restaurant: 'Restaurants',
               mechanic: 'Mechanic Shops',
-              tourist: 'Tourist Places'
+              tourist: 'Tourist Places',
+              hospital: 'Hospitals & Clinics',
+              atm: 'ATMs & Banks',
+              transit: 'Transit Hubs'
             }[activeCategory] || activeCategory}...
           </div>
         )}
@@ -190,6 +203,10 @@ function Dashboard() {
         <MapComponent 
           userLocation={userLocation} 
           pointsOfInterest={pois} 
+          selectedPoi={selectedPoi}
+          setSelectedPoi={setSelectedPoi}
+          hoveredPoi={hoveredPoi}
+          activeCategory={activeCategory}
         />
       </main>
 
