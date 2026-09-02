@@ -29,20 +29,40 @@ app.get('/api/geocode', async (req, res) => {
   }
 });
 
-// Weather proxy endpoint
+// Enhanced Weather proxy endpoint (includes forecast & apparent temp)
 app.get('/api/weather', async (req, res) => {
   const { lat, lng } = req.query;
   if (!lat || !lng) {
     return res.status(400).json({ error: 'Latitude and longitude are required' });
   }
   try {
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code`;
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code,apparent_temperature,precipitation,uv_index&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto`;
     const response = await fetch(url);
     const data = await response.json();
     res.json(data);
   } catch (error) {
     console.error('Weather API error:', error);
     res.status(500).json({ error: 'Failed to fetch weather data' });
+  }
+});
+
+// OSRM Driving Route proxy endpoint
+app.get('/api/route', async (req, res) => {
+  const { coordinates } = req.query;
+  if (!coordinates) {
+    return res.status(400).json({ error: 'Coordinates param (lng,lat;lng,lat) is required' });
+  }
+  try {
+    const url = `http://router.project-osrm.org/route/v1/driving/${coordinates}?overview=full&geometries=geojson&steps=true`;
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`OSRM responded with status: ${response.status}`);
+    }
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    console.error('OSRM route error:', error.message);
+    res.status(500).json({ error: 'Failed to calculate driving route' });
   }
 });
 
