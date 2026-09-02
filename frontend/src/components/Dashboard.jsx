@@ -165,11 +165,11 @@ function Dashboard() {
               transform: 'translate(-50%, -50%)',
               zIndex: 2000,
               background: 'var(--primary)',
-              color: '#070a13',
+              color: '#06080c',
               padding: '12px 24px',
               borderRadius: '50px',
-              fontWeight: 700,
-              boxShadow: '0 10px 25px rgba(226, 184, 101, 0.4)'
+              fontWeight: 800,
+              boxShadow: '0 10px 30px rgba(0, 229, 255, 0.45)'
             }}>
               Searching for {{
                 petrol: 'Petrol Bunks',
@@ -191,12 +191,12 @@ function Dashboard() {
               top: '40px',
               right: '40px',
               zIndex: 1000,
-              background: 'rgba(10, 15, 30, 0.65)',
+              background: 'rgba(13, 17, 26, 0.75)',
               color: 'white',
               border: '1px solid var(--glass-border)',
               padding: '10px 18px',
-              borderRadius: '20px',
-              backdropFilter: 'blur(10px)',
+              borderRadius: '14px',
+              backdropFilter: 'blur(12px)',
               cursor: 'pointer',
               fontWeight: 700,
               fontSize: '0.8rem',
@@ -206,8 +206,14 @@ function Dashboard() {
               gap: '8px',
               transition: 'all 0.2s'
             }}
-            onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
-            onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.borderColor = 'var(--accent-cyan)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.borderColor = 'var(--glass-border)';
+            }}
           >
             📍 Refresh Location
           </button>

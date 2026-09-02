@@ -1,17 +1,18 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
 
 :root {
-  --primary: #e2b865;       /* Warm Sand Gold */
-  --primary-hover: #f1cf8e; /* Light Sand Gold */
-  --secondary: #06b6d4;     /* Neon Teal */
+  --primary: #00e5ff;       /* Electric Neon Cyan from Portfolio */
+  --primary-hover: #00b8d4; /* Darker Cyan */
+  --secondary: #0ea5e9;     /* Sky Cyan */
   --accent: #f43f5e;        /* Rose */
-  --bg-dark: #05070e;       /* Deep Obsidian Space */
-  --bg-card: rgba(18, 24, 43, 0.45);
+  --bg-dark: #06080c;       /* Deep Obsidian Void */
+  --bg-card: rgba(13, 17, 26, 0.65);
   --text-main: #f8fafc;
   --text-muted: #94a3b8;
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-bg: rgba(10, 15, 30, 0.55);
-  --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  --glass-border: rgba(255, 255, 255, 0.05);
+  --glass-border-hover: rgba(0, 229, 255, 0.3);
+  --glass-bg: rgba(6, 8, 12, 0.8);
+  --shadow-lg: 0 20px 45px -10px rgba(0, 0, 0, 0.6);
 }
 
 * {
@@ -21,12 +22,17 @@
 }
 
 body {
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Inter', sans-serif;
   background-color: var(--bg-dark);
   color: var(--text-main);
   overflow: hidden;
   line-height: 1.5;
   position: relative;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Outfit', sans-serif;
 }
 
 #root {
@@ -38,34 +44,34 @@ body {
 .glowing-blob {
   position: absolute;
   border-radius: 50%;
-  filter: blur(120px);
+  filter: blur(130px);
   z-index: 0;
   pointer-events: none;
-  opacity: 0.28;
+  opacity: 0.25;
   animation: floatBlob 25s infinite alternate ease-in-out;
 }
 
 .blob-purple {
-  width: 450px;
-  height: 450px;
-  background: #7c3aed;
+  width: 45vw;
+  height: 45vw;
+  background: rgba(8, 51, 68, 0.4);
   top: -10%;
-  left: 10%;
+  left: 5%;
 }
 
 .blob-teal {
-  width: 500px;
-  height: 500px;
-  background: #0891b2;
+  width: 50vw;
+  height: 50vw;
+  background: rgba(23, 37, 84, 0.3);
   bottom: -15%;
-  right: 10%;
+  right: 5%;
   animation-delay: -7s;
 }
 
 .blob-pink {
-  width: 400px;
-  height: 400px;
-  background: #db2777;
+  width: 35vw;
+  height: 35vw;
+  background: rgba(6, 182, 212, 0.15);
   top: 30%;
   left: 45%;
   animation-delay: -14s;
@@ -73,33 +79,33 @@ body {
 
 @keyframes floatBlob {
   0% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(60px, 40px) scale(1.15); }
-  100% { transform: translate(-40px, -60px) scale(0.9); }
+  50% { transform: translate(6vw, 4vh) scale(1.15); }
+  100% { transform: translate(-4vw, -6vh) scale(0.9); }
 }
 
-/* Glassmorphism Utilities - Floating Dribbble Style */
+/* Glassmorphism Utilities - Portfolio Style */
 .glass-panel {
   background: var(--glass-bg);
-  backdrop-filter: blur(30px);
-  -webkit-backdrop-filter: blur(30px);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
   border: 1px solid var(--glass-border);
-  border-radius: 24px;
+  border-radius: 20px;
   box-shadow: var(--shadow-lg);
 }
 
 .glass-card {
   background: var(--bg-card);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px) saturate(180%);
   border: 1px solid var(--glass-border);
-  border-radius: 18px;
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  border-radius: 16px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glass-card:hover {
-  transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.35);
-  border-color: rgba(226, 184, 101, 0.25);
-  background: rgba(18, 24, 43, 0.6);
+  transform: translateY(-3px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 229, 255, 0.2);
+  border-color: var(--glass-border-hover);
+  background: rgba(20, 27, 41, 0.85);
 }
 
 /* Custom transitions and states for POI cards */
@@ -112,9 +118,9 @@ body {
 }
 
 .poi-card.active {
-  background: rgba(226, 184, 101, 0.08) !important;
+  background: rgba(0, 229, 255, 0.08) !important;
   border-color: var(--primary) !important;
-  box-shadow: 0 0 20px rgba(226, 184, 101, 0.2) !important;
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.25) !important;
 }
 
 /* Category Slider horizontal scroll styling */
@@ -131,7 +137,7 @@ body {
 }
 
 .category-slider::-webkit-scrollbar-thumb {
-  background: rgba(226, 184, 101, 0.2);
+  background: rgba(0, 229, 255, 0.3);
   border-radius: 10px;
 }
 
@@ -150,7 +156,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(226, 184, 101, 0.3);
+  background: rgba(0, 229, 255, 0.4);
 }
 
 /* Animations */
@@ -167,21 +173,21 @@ body {
 .leaflet-container {
   height: 100%;
   width: 100%;
-  background: #080c14 !important;
+  background: #06080c !important;
 }
 
 .leaflet-popup-content-wrapper {
-  background: rgba(10, 15, 30, 0.95) !important;
-  backdrop-filter: blur(12px);
+  background: rgba(6, 8, 12, 0.95) !important;
+  backdrop-filter: blur(16px);
   color: var(--text-main) !important;
-  border: 1px solid var(--glass-border);
-  border-radius: 20px !important;
-  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.6) !important;
+  border: 1px solid rgba(0, 229, 255, 0.25);
+  border-radius: 18px !important;
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.7), 0 0 20px rgba(0, 229, 255, 0.15) !important;
 }
 
 .leaflet-popup-tip {
-  background: rgba(10, 15, 30, 0.95) !important;
-  border: 1px solid var(--glass-border);
+  background: rgba(6, 8, 12, 0.95) !important;
+  border: 1px solid rgba(0, 229, 255, 0.25);
 }
 
 .leaflet-popup-close-button {
@@ -191,5 +197,5 @@ body {
 }
 
 .leaflet-popup-close-button:hover {
-  color: white !important;
+  color: var(--primary) !important;
 }

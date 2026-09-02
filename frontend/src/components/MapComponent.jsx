@@ -6,21 +6,21 @@ import 'leaflet/dist/leaflet.css';
 // Fix default marker icon shadow URL
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
-// Generate custom SVG markers for different categories (cohesive sand-gold)
+// Generate custom SVG markers in Portfolio Cyan Palette
 const getMarkerIcon = (category, isSelected = false, isHovered = false) => {
-  const color = '#e2b865'; // Cohesive Sand Gold
+  const color = '#00e5ff'; // Electric Neon Cyan from Portfolio
   const size = isSelected ? 38 : (isHovered ? 34 : 28);
-  const strokeColor = isSelected ? 'white' : '#070a13';
+  const strokeColor = isSelected ? '#ffffff' : '#06080c';
   const strokeWidth = isSelected ? 2.5 : 1.5;
   const shadow = isSelected 
-    ? 'filter: drop-shadow(0 0 10px rgba(226, 184, 101, 0.85));' 
-    : (isHovered ? 'filter: drop-shadow(0 0 6px rgba(226, 184, 101, 0.5));' : '');
+    ? 'filter: drop-shadow(0 0 12px rgba(0, 229, 255, 0.95));' 
+    : (isHovered ? 'filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.65));' : '');
 
   return new L.DivIcon({
     html: `<div style="${shadow} display: flex; align-items: center; justify-content: center;">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="${color}" width="${size}" height="${size}" stroke="${strokeColor}" stroke-width="${strokeWidth}" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin">
         <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
-        <circle cx="12" cy="10" r="3.5" fill="#070a13"/>
+        <circle cx="12" cy="10" r="3.5" fill="#06080c"/>
       </svg>
     </div>`,
     className: 'custom-map-pin',
@@ -30,13 +30,13 @@ const getMarkerIcon = (category, isSelected = false, isHovered = false) => {
   });
 };
 
-// Custom User Pin Icon
+// Custom User Pin Icon with Radar Pulse
 const getUserIcon = () => {
   return new L.DivIcon({
-    html: `<div style="filter: drop-shadow(0 0 8px rgba(244, 63, 94, 0.8));">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#f43f5e" width="34" height="34" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="10" fill="rgba(244,63,94,0.3)"/>
-        <circle cx="12" cy="12" r="6" fill="#f43f5e" stroke="white" stroke-width="2"/>
+    html: `<div style="filter: drop-shadow(0 0 12px rgba(0, 229, 255, 0.8)); display: flex; align-items: center; justify-content: center;">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#00e5ff" width="34" height="34" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10" fill="rgba(0, 229, 255, 0.25)"/>
+        <circle cx="12" cy="12" r="5" fill="#00e5ff" stroke="white" stroke-width="2"/>
       </svg>
     </div>`,
     className: 'user-map-pin',
@@ -48,96 +48,35 @@ const getUserIcon = () => {
 // Map Controller for auto-panning and zooming when items are selected
 function MapController({ selectedPoi }) {
   const map = useMap();
+  
   useEffect(() => {
     if (selectedPoi) {
-      map.setView([selectedPoi.lat, selectedPoi.lng], 15, {
+      map.flyTo([selectedPoi.lat, selectedPoi.lng], 15, {
         animate: true,
         duration: 1.2
       });
     }
   }, [selectedPoi, map]);
+
   return null;
 }
 
-// POI Popup content component
-const POIPopupContent = ({ poi, userLocation }) => {
-  const [address, setAddress] = useState(poi.address);
-  const [loading, setLoading] = useState(false);
+// Map Auto-Fit bounds controller
+function BoundsController({ pointsOfInterest, userLocation }) {
+  const map = useMap();
 
   useEffect(() => {
-    if (poi.address === 'Address available in navigation') {
-      let isMounted = true;
-      setLoading(true);
-      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${poi.lat}&lon=${poi.lng}&zoom=18&addressdetails=1`)
-        .then(res => res.json())
-        .then(data => {
-          if (isMounted) {
-            setAddress(data.display_name || 'Address not found');
-            setLoading(false);
-          }
-        })
-        .catch(() => {
-          if (isMounted) {
-            setAddress('Address not found');
-            setLoading(false);
-          }
-        });
-      return () => { isMounted = false; };
+    if (pointsOfInterest.length > 0 && userLocation) {
+      const bounds = L.latLngBounds([
+        [userLocation.lat, userLocation.lng],
+        ...pointsOfInterest.map(p => [p.lat, p.lng])
+      ]);
+      map.fitBounds(bounds, { padding: [50, 50], maxZoom: 15 });
     }
-  }, [poi]);
+  }, [pointsOfInterest, userLocation, map]);
 
-  return (
-    <div style={{ padding: '6px', minWidth: '220px' }}>
-      <img 
-        src={poi.image} 
-        alt={poi.name}
-        style={{ width: '100%', height: '110px', objectFit: 'cover', borderRadius: '8px', marginBottom: '8px' }}
-      />
-      <h4 style={{ margin: '0 0 6px 0', color: 'white', fontSize: '0.95rem', fontWeight: 800 }}>{poi.name}</h4>
-      
-      <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '8px', flexWrap: 'wrap' }}>
-        <span style={{ background: '#f59e0b', color: 'white', padding: '2px 6px', borderRadius: '4px', fontSize: '0.65rem', fontWeight: 700 }}>
-          ★ {poi.rating}
-        </span>
-        {poi.distance !== undefined && (
-          <span style={{ background: 'var(--primary)', color: 'white', padding: '2px 6px', borderRadius: '4px', fontSize: '0.65rem', fontWeight: 700 }}>
-            {poi.distance} km away
-          </span>
-        )}
-      </div>
-      
-      <div style={{ marginBottom: '12px' }}>
-        <p style={{ margin: '0 0 2px 0', fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 600 }}>Address:</p>
-        <p style={{ margin: '0', fontSize: '0.75rem', color: '#cbd5e1', lineHeight: '1.3' }}>
-          {loading ? 'Fetching location details...' : address}
-        </p>
-      </div>
-
-      <div style={{ display: 'flex', gap: '8px' }}>
-        <button 
-          onClick={() => {
-            const url = `https://www.google.com/maps/dir/?api=1&origin=${userLocation.lat},${userLocation.lng}&destination=${poi.lat},${poi.lng}&travelmode=driving`;
-            window.open(url, '_blank');
-          }}
-          style={{ 
-            flex: 1,
-            background: 'var(--primary)', 
-            color: 'white', 
-            border: 'none', 
-            padding: '8px 12px', 
-            borderRadius: '8px',
-            fontSize: '0.75rem',
-            fontWeight: 700,
-            cursor: 'pointer',
-            boxShadow: '0 2px 6px rgba(99, 102, 241, 0.3)'
-          }}
-        >
-          Directions
-        </button>
-      </div>
-    </div>
-  );
-};
+  return null;
+}
 
 const MapComponent = ({ 
   userLocation, 
@@ -147,7 +86,7 @@ const MapComponent = ({
   hoveredPoi, 
   activeCategory 
 }) => {
-  const [mapCenter, setMapCenter] = useState([12.9716, 77.5946]); // Bangalore default
+  const [mapCenter, setMapCenter] = useState([11.0168, 76.9558]); // Default center
 
   useEffect(() => {
     if (userLocation) {
@@ -156,7 +95,15 @@ const MapComponent = ({
   }, [userLocation]);
 
   return (
-    <div style={{ flex: 1, position: 'relative', borderRadius: '24px', overflow: 'hidden', margin: '20px 20px 20px 10px', boxShadow: '0 12px 32px rgba(0,0,0,0.3)', border: '1px solid var(--glass-border)' }}>
+    <div style={{ 
+      flex: 1, 
+      position: 'relative', 
+      borderRadius: '20px', 
+      overflow: 'hidden', 
+      margin: '20px 20px 20px 10px', 
+      boxShadow: '0 20px 50px rgba(0,0,0,0.6)', 
+      border: '1px solid var(--glass-border)' 
+    }}>
       <MapContainer 
         center={mapCenter} 
         zoom={13} 
@@ -164,7 +111,7 @@ const MapComponent = ({
         style={{ height: '100%', width: '100%' }}
         attributionControl={false}
       >
-        {/* Sleek Dark Mode Tiles */}
+        {/* Sleek Dark Mode Vector Tiles */}
         <TileLayer
           attribution=""
           url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
@@ -174,24 +121,24 @@ const MapComponent = ({
         {userLocation && (
           <Marker position={[userLocation.lat, userLocation.lng]} icon={getUserIcon()}>
             <Popup>
-              <div style={{ color: 'white', fontWeight: 700, fontSize: '0.85rem' }}>
-                📍 You are here
+              <div style={{ color: 'white', fontWeight: 800, fontSize: '0.85rem' }}>
+                📍 You Are Here
               </div>
             </Popup>
           </Marker>
         )}
 
-        {/* Route connecting line */}
+        {/* Route connecting line in Neon Cyan */}
         {pointsOfInterest.length > 0 && userLocation && (
           <Polyline 
             positions={[
               [userLocation.lat, userLocation.lng],
               ...pointsOfInterest.map(p => [p.lat, p.lng])
             ]} 
-            color="#e2b865" 
+            color="#00e5ff" 
             dashArray="8, 12"
             weight={3.5}
-            opacity={0.65}
+            opacity={0.75}
           />
         )}
 
@@ -207,25 +154,33 @@ const MapComponent = ({
               eventHandlers={{
                 click: () => {
                   setSelectedPoi(poi);
-                }
+                },
               }}
-            />
+            >
+              <Popup>
+                <div style={{ width: '220px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <img 
+                    src={poi.image} 
+                    alt={poi.name} 
+                    style={{ width: '100%', height: '100px', objectFit: 'cover', borderRadius: '10px' }} 
+                  />
+                  <div>
+                    <h3 style={{ margin: '0 0 4px 0', fontSize: '0.95rem', fontWeight: 800, color: 'white' }}>
+                      {poi.name}
+                    </h3>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                      <span style={{ color: 'var(--primary)', fontWeight: 700 }}>★ {poi.rating}</span>
+                      <span>{poi.distance} km away</span>
+                    </div>
+                  </div>
+                </div>
+              </Popup>
+            </Marker>
           );
         })}
 
-        {/* Active popup rendering anchored to selected POI */}
-        {selectedPoi && (
-          <Popup 
-            position={[selectedPoi.lat, selectedPoi.lng]} 
-            onClose={() => setSelectedPoi(null)}
-            maxWidth={300}
-          >
-            <POIPopupContent poi={selectedPoi} userLocation={userLocation} />
-          </Popup>
-        )}
-
-        {/* Auto panning/zooming helper */}
         <MapController selectedPoi={selectedPoi} />
+        <BoundsController pointsOfInterest={pointsOfInterest} userLocation={userLocation} />
       </MapContainer>
     </div>
   );

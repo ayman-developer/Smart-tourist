@@ -51,7 +51,7 @@ const Sidebar = ({
       padding: '24px',
       display: 'flex',
       flexDirection: 'column',
-      gap: '20px',
+      gap: '18px',
       position: 'relative',
       overflow: 'hidden',
       zIndex: 10
@@ -62,25 +62,24 @@ const Sidebar = ({
         <div style={{ 
           background: 'var(--primary)',
           padding: '8px',
-          borderRadius: '8px',
+          borderRadius: '10px',
           display: 'flex',
-          boxShadow: '0 4px 15px rgba(226, 184, 101, 0.25)'
+          boxShadow: '0 4px 15px rgba(0, 229, 255, 0.4)'
         }}>
-          <Compass size={20} color="#05070e" />
+          <Compass size={20} color="#06080c" />
         </div>
         <div>
           <h1 style={{ 
             fontSize: '1.2rem', 
             fontWeight: 900, 
-            letterSpacing: '0.1em', 
-            textTransform: 'uppercase',
+            letterSpacing: '0.05em', 
             color: 'white',
             margin: 0
           }}>
             Tourist<span style={{ color: 'var(--primary)' }}>AI</span>
           </h1>
-          <p style={{ fontSize: '0.65rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', margin: 0, fontWeight: 700 }}>
-            Premium Travel Finder
+          <p style={{ fontSize: '0.68rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', margin: 0, fontWeight: 700 }}>
+            Intelligent Explorer
           </p>
         </div>
       </div>
@@ -90,8 +89,8 @@ const Sidebar = ({
 
       {/* Horizontal Slider Categories */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-        <span style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--text-muted)', fontWeight: 800 }}>
-          Categories
+        <span style={{ fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--accent-cyan)', fontWeight: 800 }}>
+          Service Clusters
         </span>
         <div className="category-slider">
           {categories.map((cat) => {
@@ -113,11 +112,12 @@ const Sidebar = ({
                   display: 'flex',
                   alignItems: 'center',
                   gap: '8px',
-                  color: isActive ? '#05070e' : 'rgba(255, 255, 255, 0.8)',
+                  color: isActive ? '#06080c' : 'rgba(255, 255, 255, 0.8)',
                   cursor: 'pointer',
                   fontSize: '0.75rem',
                   fontWeight: 700,
                   whiteSpace: 'nowrap',
+                  boxShadow: isActive ? '0 0 15px rgba(0, 229, 255, 0.35)' : 'none',
                   transition: 'all 0.25s ease'
                 }}
               >
@@ -133,20 +133,19 @@ const Sidebar = ({
       <div style={{ position: 'relative' }}>
         <input 
           type="text"
-          placeholder={`Filter ${categories.find(c => c.id === activeCategory)?.label.toLowerCase()}...`}
+          placeholder={`Search ${categories.find(c => c.id === activeCategory)?.label.toLowerCase()}...`}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           style={{
             width: '100%',
-            background: 'rgba(5, 7, 14, 0.5)',
+            background: 'rgba(6, 8, 12, 0.6)',
             border: '1px solid var(--glass-border)',
-            borderRadius: '14px',
-            padding: '12px 16px',
+            borderRadius: '12px',
+            padding: '11px 16px',
             color: 'white',
             fontSize: '0.82rem',
             outline: 'none',
-            transition: 'all 0.3s',
-            boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.1)'
+            transition: 'all 0.3s'
           }}
         />
       </div>
@@ -157,12 +156,12 @@ const Sidebar = ({
         overflowY: 'auto', 
         display: 'flex', 
         flexDirection: 'column', 
-        gap: '12px', 
+        gap: '10px', 
         paddingRight: '2px' 
       }}>
         {filteredPois.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '30px 10px', color: 'var(--text-muted)', fontSize: '0.8rem' }}>
-            No spots found in this area.
+            No spots found in this radius.
           </div>
         ) : (
           filteredPois.map(poi => {
@@ -178,11 +177,11 @@ const Sidebar = ({
                   padding: '12px',
                   cursor: 'pointer',
                   borderLeft: isActive ? '3px solid var(--primary)' : '1px solid var(--glass-border)',
-                  background: isActive ? 'rgba(226, 184, 101, 0.05)' : 'rgba(18, 24, 43, 0.45)',
+                  background: isActive ? 'rgba(0, 229, 255, 0.08)' : 'rgba(13, 17, 26, 0.65)',
                   display: 'flex',
                   gap: '12px',
                   alignItems: 'center',
-                  borderRadius: '16px',
+                  borderRadius: '14px',
                   transition: 'all 0.25s ease'
                 }}
               >
@@ -190,8 +189,8 @@ const Sidebar = ({
                   src={poi.image} 
                   alt={poi.name} 
                   style={{ 
-                    width: '46px', 
-                    height: '46px', 
+                    width: '44px', 
+                    height: '44px', 
                     borderRadius: '10px', 
                     objectFit: 'cover', 
                     flexShrink: 0 
@@ -210,7 +209,7 @@ const Sidebar = ({
                     {poi.name}
                   </h4>
                   <div style={{ display: 'flex', gap: '8px', alignItems: 'center', fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 600 }}>
-                    <span style={{ color: '#f59e0b', display: 'flex', alignItems: 'center', gap: '2px' }}>
+                    <span style={{ color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: '2px' }}>
                       ★ {poi.rating}
                     </span>
                     <span>•</span>
@@ -226,20 +225,20 @@ const Sidebar = ({
       {/* Optimize Route action block */}
       <div style={{ 
         borderTop: '1px solid rgba(255,255,255,0.06)', 
-        paddingTop: '16px' 
+        paddingTop: '14px' 
       }}>
         <button 
           onClick={onOptimizeRoute}
           disabled={pois.length === 0}
           style={{
-            background: 'linear-gradient(135deg, var(--primary), var(--primary-hover))',
-            color: '#05070e',
+            background: 'var(--primary)',
+            color: '#06080c',
             border: 'none',
             padding: '12px',
-            borderRadius: '14px',
+            borderRadius: '12px',
             fontWeight: 800,
-            fontSize: '0.8rem',
-            letterSpacing: '0.06em',
+            fontSize: '0.82rem',
+            letterSpacing: '0.05em',
             textTransform: 'uppercase',
             display: 'flex',
             alignItems: 'center',
@@ -247,7 +246,7 @@ const Sidebar = ({
             gap: '8px',
             cursor: 'pointer',
             width: '100%',
-            boxShadow: '0 8px 20px rgba(226, 184, 101, 0.25)',
+            boxShadow: '0 5px 20px rgba(0, 229, 255, 0.4)',
             transition: 'all 0.25s',
             opacity: pois.length === 0 ? 0.5 : 1
           }}
@@ -258,8 +257,8 @@ const Sidebar = ({
             if (pois.length > 0) e.currentTarget.style.transform = 'translateY(0)';
           }}
         >
-          <Navigation size={14} />
-          Optimize Route
+          <Navigation size={15} />
+          Optimize Route AI
         </button>
       </div>
     </div>

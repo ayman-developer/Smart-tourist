@@ -1,664 +1,531 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
+  MapPin, 
   Compass, 
   Search, 
-  Play, 
+  Navigation, 
+  Fuel, 
+  Hotel, 
+  Utensils, 
+  Wrench, 
+  HeartPulse, 
+  DollarSign, 
+  Train, 
+  ShieldCheck, 
+  Zap, 
+  Cpu, 
   Star, 
   ArrowRight, 
-  ShieldCheck, 
-  Eye, 
-  ChevronRight,
-  ChevronLeft
+  Mail, 
+  ChevronRight, 
+  ExternalLink,
+  Globe,
+  Radio
 } from 'lucide-react';
 import '../../styles/landing.css';
 
 const LandingPage = () => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('Home');
+  const [scrolled, setScrolled] = useState(false);
+  const [activeNav, setActiveNav] = useState('about');
+  const [typingIndex, setTypingIndex] = useState(0);
+  const [typingText, setTypingText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  const tourCategories = [
-    { title: 'Adventure Tours', image: 'https://images.unsplash.com/photo-1530789253388-582c481c54b0?w=500&q=80' },
-    { title: 'Cultural Tours', image: 'https://images.unsplash.com/photo-1518638150341-db70061e8551?w=500&q=80' },
-    { title: 'Beach Getaways', image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=500&q=80' },
-    { title: 'Luxury Escapes', image: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=500&q=80' },
-    { title: 'Family Vacations', image: 'https://images.unsplash.com/photo-1511895426328-dc8714191300?w=500&q=80' },
-    { title: 'Wildlife Expeditions', image: 'https://images.unsplash.com/photo-1470240731273-7821a6eeb6bd?w=500&q=80' }
+  // Typing effect phrases matching portfolio style
+  const phrases = [
+    'Real-time Local POI Discovery',
+    'AI GPS Route Optimization',
+    'Multi-Mirror OSM Resilience',
+    'Emergency & Amenity Mapping'
   ];
 
-  const popularTours = [
-    {
-      title: 'Romantic Getaway to Paris',
-      desc: 'Experience timeless romance and elegance in the iconic settings of Paris, the City of Love.',
-      image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=500&q=80',
-      rating: '4.8',
-      days: '5 Days, 4 Nights'
-    },
-    {
-      title: 'Santorini Escape',
-      desc: "Soak in the sun, white houses, and blue domes of Santorini, Greece's paradise.",
-      image: 'https://images.unsplash.com/photo-1533105079780-92b9be482077?w=500&q=80',
-      rating: '4.8',
-      days: '5 Days, 4 Nights'
-    },
-    {
-      title: 'Tokyo Cultural Immersion',
-      desc: "Immerse yourself in Tokyo's hyper-modern tech streets and tranquil shrine gardens.",
-      image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=500&q=80',
-      rating: '4.8',
-      days: '5 Days, 4 Nights'
-    }
-  ];
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 40);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
-  const inspiredOffers = [
-    { discount: '15%', title: 'Exclusive Hotel Deals Just For You', date: 'Valid till 30 Aug' },
-    { discount: '25%', title: 'Flight & Resort Packages Combined', date: 'Valid till 15 Sep' },
-    { discount: '35%', title: 'Last Minute Weekend Staycations', date: 'Valid till 05 Oct' }
-  ];
+  // Typing effect loop
+  useEffect(() => {
+    const currentPhrase = phrases[typingIndex % phrases.length];
+    const typingSpeed = isDeleting ? 40 : 80;
 
-  const blogPosts = [
-    { title: 'The Ultimate Guide to Packing Light', date: '30 Jan', author: 'By Admin', image: 'https://images.unsplash.com/photo-1553913861-c0fddf2619ee?w=500&q=80' },
-    { title: 'Best Times of Year to Visit Popular Destinations', date: '28 Jan', author: 'By Admin', image: 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=500&q=80' },
-    { title: 'How to Travel Like a Local: Insider Tips', date: '25 Jan', author: 'By Admin', image: 'https://images.unsplash.com/photo-1501555088652-021faa106b9b?w=500&q=80' }
-  ];
+    const timer = setTimeout(() => {
+      if (!isDeleting && typingText === currentPhrase) {
+        setTimeout(() => setIsDeleting(true), 1500);
+      } else if (isDeleting && typingText === '') {
+        setIsDeleting(false);
+        setTypingIndex(prev => prev + 1);
+      } else {
+        setTypingText(
+          isDeleting
+            ? currentPhrase.substring(0, typingText.length - 1)
+            : currentPhrase.substring(0, typingText.length + 1)
+        );
+      }
+    }, typingSpeed);
 
-  const galleryImages = [
-    'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=400&q=80',
-    'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400&q=80',
-    'https://images.unsplash.com/photo-1472214222541-d510753a4707?w=400&q=80',
-    'https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?w=400&q=80',
-    'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=400&q=80',
-    'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?w=400&q=80'
-  ];
+    return () => clearTimeout(timer);
+  }, [typingText, isDeleting, typingIndex]);
 
-  const handleNavLinkClick = (link, targetId) => {
-    setActiveTab(link);
-    const element = document.getElementById(targetId);
+  const scrollToSection = (id) => {
+    setActiveNav(id);
+    const element = document.getElementById(id);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      element.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
-  const menuItems = [
-    { label: 'Home', id: 'home' },
-    { label: 'Destination', id: 'destination' },
-    { label: 'About Us', id: 'about-us' },
-    { label: 'Tour', id: 'tour' },
-    { label: 'Testimonial', id: 'testimonial' },
-    { label: 'Blog', id: 'blog' }
+  const categories = [
+    { 
+      id: 'tourist', 
+      title: 'Tourist Attractions', 
+      desc: 'Historic landmarks, scenic viewpoints, cultural monuments, and parks.',
+      tag: 'Heritage & Leisure',
+      icon: MapPin 
+    },
+    { 
+      id: 'hotel', 
+      title: 'Lodges & Accommodations', 
+      desc: 'Top-rated hotels, guest houses, and luxury resorts with verified reviews.',
+      tag: 'Hospitality',
+      icon: Hotel 
+    },
+    { 
+      id: 'restaurant', 
+      title: 'Dining & Restaurants', 
+      desc: 'Local authentic cuisines, fine dining, cafes, and street food hubs.',
+      tag: 'Gastronomy',
+      icon: Utensils 
+    },
+    { 
+      id: 'hospital', 
+      title: 'Hospitals & Medical Care', 
+      desc: '24/7 emergency clinics, specialized hospitals, and pharmacies nearby.',
+      tag: 'Emergency Support',
+      icon: HeartPulse 
+    },
+    { 
+      id: 'petrol', 
+      title: 'Petrol & Fuel Outposts', 
+      desc: 'HP, Bharat Petroleum, Indian Oil, and EV fast-charging stations.',
+      tag: 'Mobility & Fuel',
+      icon: Fuel 
+    },
+    { 
+      id: 'mechanic', 
+      title: 'Mechanics & Repair Shops', 
+      desc: 'Roadside assistance, tire repair outposts, and vehicle workshops.',
+      tag: 'Breakdown Rescue',
+      icon: Wrench 
+    },
+    { 
+      id: 'atm', 
+      title: 'ATMs & Cash Centers', 
+      desc: 'Nationalized bank branches and 24-hour instant ATM terminals.',
+      tag: 'Banking',
+      icon: DollarSign 
+    },
+    { 
+      id: 'transit', 
+      title: 'Transit Hubs & Railways', 
+      desc: 'Bus terminals, metro interchanges, and central railway stations.',
+      tag: 'Public Transit',
+      icon: Train 
+    }
   ];
 
+  const handleContactSubmit = (e) => {
+    e.preventDefault();
+    alert('Thank you! Your feedback has been sent to our developer team.');
+  };
+
   return (
-    <div className="landing-outer-wrapper">
-      <div className="landing-page">
-        
-        {/* Navbar Container */}
-        <nav className="lp-navbar">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div style={{ 
-              background: 'var(--lp-primary)', 
-              padding: '8px', 
-              borderRadius: '50%', 
-              display: 'flex',
-              boxShadow: '0 4px 10px rgba(0, 167, 181, 0.3)'
-            }}>
-              <Compass size={22} color="white" />
-            </div>
-            <span style={{ fontSize: '1.25rem', fontWeight: 900, textTransform: 'capitalize', letterSpacing: '-0.02em', color: '#0f172a' }}>
-              Travel<span style={{ color: 'var(--lp-primary)' }}>Go</span>
-            </span>
+    <div className="landing-page">
+      
+      {/* Floating Background Glow Blobs (Portfolio Signature) */}
+      <div className="glow-blobs-container">
+        <div className="blob-1"></div>
+        <div className="blob-2"></div>
+        <div className="blob-3"></div>
+      </div>
+
+      {/* Fixed Header Navigation Bar */}
+      <header className={`header ${scrolled ? 'header-scrolled' : ''}`}>
+        <div className="nav-container">
+          
+          {/* Logo with Cyan Glow */}
+          <div className="logo" onClick={() => scrollToSection('about')}>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" width="34" height="34" style={{ filter: 'drop-shadow(0 0 8px rgba(0, 229, 255, 0.4))' }}>
+              <circle cx="50" cy="50" r="42" stroke="#00e5ff" strokeWidth="7" strokeLinecap="round" strokeDasharray="35 15 150 15" fill="rgba(0, 229, 255, 0.05)" />
+              <path d="M50 24 L32 72 H43 L50 52 L57 52 L64 72 H75 Z" fill="#ffffff" />
+              <rect x="45" y="47" width="10" height="4.5" fill="#00e5ff" />
+            </svg>
+            <span style={{ fontWeight: 900 }}>Tourist<span className="logo-accent">AI</span></span>
           </div>
 
-          {/* Center menu links */}
-          <div className="lp-nav-links">
-            {menuItems.map((item) => (
-              <span 
-                key={item.label} 
-                className="lp-nav-link"
-                onClick={() => handleNavLinkClick(item.label, item.id)}
-                style={{ color: activeTab === item.label ? 'var(--lp-primary)' : '#0f172a' }}
-              >
-                {item.label}
-              </span>
-            ))}
+          {/* Live System Indicator Badge */}
+          <div style={{
+            background: 'rgba(0, 229, 255, 0.08)',
+            border: '1px solid rgba(0, 229, 255, 0.25)',
+            padding: '4px 12px',
+            borderRadius: '20px',
+            fontSize: '0.75rem',
+            fontWeight: 700,
+            color: 'var(--accent-cyan)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px'
+          }}>
+            <span className="pulse-indicator"></span>
+            GPS Cluster Active
           </div>
 
-          {/* Right book button */}
-          <div>
-            <button className="lp-btn-pill-outline" onClick={() => navigate('/app')}>
-              Book Now
+          {/* Menu Items */}
+          <nav className="nav-menu">
+            <ul className="nav-list">
+              <li><button onClick={() => scrollToSection('about')} className={`nav-btn ${activeNav === 'about' ? 'active' : ''}`}>About</button></li>
+              <li><button onClick={() => scrollToSection('services')} className={`nav-btn ${activeNav === 'services' ? 'active' : ''}`}>Services</button></li>
+              <li><button onClick={() => scrollToSection('architecture')} className={`nav-btn ${activeNav === 'architecture' ? 'active' : ''}`}>Architecture</button></li>
+              <li><button onClick={() => scrollToSection('reviews')} className={`nav-btn ${activeNav === 'reviews' ? 'active' : ''}`}>Reviews</button></li>
+              <li><button onClick={() => scrollToSection('contact')} className={`nav-btn ${activeNav === 'contact' ? 'active' : ''}`}>Contact</button></li>
+            </ul>
+          </nav>
+
+          {/* Nav Actions */}
+          <div className="nav-actions">
+            <a 
+              href="https://github.com/ayman-developer/Smart-tourist" 
+              target="_blank" 
+              rel="noreferrer" 
+              className="icon-btn" 
+              title="GitHub Repository"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+            </a>
+            <button className="btn btn-primary" onClick={() => navigate('/app')}>
+              <Compass size={16} /> Launch App
             </button>
           </div>
-        </nav>
 
-        {/* Hero Section Container */}
-        <div className="lp-hero-wrapper" id="home">
-          <div 
-            className="lp-hero-container"
-            style={{ 
-              backgroundImage: `url('/assets/dribbble_hero.jpg')`
-            }}
-          >
-            <div className="lp-hero-text-block">
-              <h1 style={{ fontSize: '3.6rem', fontWeight: 900, color: '#0f172a', lineHeight: 1.15, marginBottom: '1.2rem' }}>
-                Explore the World,<br />One Trip at a Time
-              </h1>
-              <p style={{ color: 'var(--lp-text-muted)', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: '2.5rem', fontWeight: 500 }}>
-                Discover unforgettable adventures, explore breathtaking destinations, and create lifelong memories with Trip Travel — your trusted partner for unique, expertly curated global travel experiences.
-              </p>
-              <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                <button className="lp-btn-pill-primary" onClick={() => navigate('/app')}>
-                  Start Your Journey
-                </button>
-                <button 
-                  className="lp-btn-pill-outline" 
-                  style={{ background: 'white' }}
-                  onClick={() => alert('Opening visual travel presentation video...')}
-                >
-                  <Play size={14} fill="var(--lp-primary)" style={{ stroke: 'none' }} />
-                  Play Video
-                </button>
-              </div>
-            </div>
-
-            {/* Floating Search Bar */}
-            <div className="lp-search-bar">
-              <div className="search-field">
-                <span className="search-label">Located In</span>
-                <select className="search-value">
-                  <option value="coimbatore">Coimbatore, TN</option>
-                  <option value="chennai">Chennai, TN</option>
-                  <option value="bengaluru">Bengaluru, KA</option>
-                </select>
-              </div>
-              <div className="search-field">
-                <span className="search-label">From - To</span>
-                <select className="search-value">
-                  <option>Jan 12 - Jan 25</option>
-                  <option>Feb 05 - Feb 18</option>
-                  <option>Mar 10 - Mar 24</option>
-                </select>
-              </div>
-              <div className="search-field">
-                <span className="search-label">Filter</span>
-                <select className="search-value">
-                  <option>All Activities</option>
-                  <option>Adventure Sports</option>
-                  <option>Luxury Resorts</option>
-                  <option>Cultural Sightseeing</option>
-                </select>
-              </div>
-              <button 
-                onClick={() => navigate('/app')}
-                style={{
-                  background: 'var(--lp-primary)',
-                  border: 'none',
-                  width: '50px',
-                  height: '50px',
-                  borderRadius: '16px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                  color: 'white',
-                  boxShadow: '0 4px 12px rgba(0,167,181,0.3)',
-                  transition: 'all 0.2s'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
-              >
-                <Search size={20} />
-              </button>
-            </div>
-          </div>
         </div>
+      </header>
 
-        {/* spacer for floating search bar */}
-        <div style={{ height: '70px' }}></div>
+      {/* SECTION 1: HERO / ABOUT */}
+      <section id="about" className="section" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', paddingTop: '130px' }}>
+        <div className="container">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '50px', alignItems: 'center' }}>
+            
+            {/* Left Hero Content */}
+            <div>
+              <span className="section-subtitle">Intelligent Concierge</span>
+              <h1 className="hero-title">
+                Smart Tourist<br />Assistant
+              </h1>
+              
+              <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--text-secondary)', margin: '18px 0 24px 0' }}>
+                Specializing in <span className="typing-text">{typingText}</span>
+              </h2>
 
-        {/* Tour Categories Section */}
-        <section id="destination" style={{ padding: '80px 6%' }}>
-          <div style={{ textAlign: 'center', marginBottom: '50px' }}>
-            <span className="font-script">Wonderful place for You</span>
-            <h2 style={{ fontSize: '2.5rem', fontWeight: 900, color: '#0f172a', margin: '4px 0 0 0' }}>
-              Tour Categories
-            </h2>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '24px' }}>
-            {tourCategories.map((cat, idx) => (
-              <div key={idx} className="category-card">
-                <img 
-                  src={cat.image} 
-                  alt={cat.title} 
-                  style={{ 
-                    width: '100%', 
-                    height: '140px', 
-                    borderRadius: '24px 6px 24px 6px', 
-                    objectFit: 'cover',
-                    marginBottom: '14px'
-                  }} 
-                />
-                <h4 style={{ fontSize: '0.9rem', fontWeight: 800, color: '#0f172a', margin: 0 }}>
-                  {cat.title}
-                </h4>
+              <div className="glass" style={{ padding: '20px 24px', maxWidth: '580px', marginBottom: '28px', color: 'var(--text-secondary)', fontSize: '0.98rem', lineHeight: 1.7 }}>
+                An autonomous, AI-driven exploration assistant engineered to geocode essential services, optimize multi-stop travel routes, and ensure high availability with real-time multi-mirror Overpass OSM fallback.
               </div>
-            ))}
-          </div>
-        </section>
 
-        {/* Most Popular Tour Section */}
-        <section id="tour" style={{ padding: '80px 6%', background: 'var(--lp-bg-alt)' }}>
-          <div style={{ textAlign: 'center', marginBottom: '50px' }}>
-            <span className="font-script">Wonderful place for You</span>
-            <h2 style={{ fontSize: '2.5rem', fontWeight: 900, color: '#0f172a', margin: '4px 0 0 0' }}>
-              Most Popular Tour
-            </h2>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '30px' }}>
-            {popularTours.map((tour, idx) => (
-              <div key={idx} className="tour-card">
-                <div style={{ height: '240px', overflow: 'hidden', position: 'relative' }}>
-                  <img src={tour.image} alt={tour.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                  <div style={{
-                    position: 'absolute',
-                    top: '16px',
-                    right: '16px',
-                    background: 'rgba(255, 255, 255, 0.95)',
-                    padding: '6px 12px',
-                    borderRadius: '20px',
-                    fontSize: '0.75rem',
-                    fontWeight: 800,
-                    color: 'var(--lp-primary)',
-                    boxShadow: '0 4px 8px rgba(0,0,0,0.1)'
-                  }}>
-                    {tour.days}
-                  </div>
+              {/* Counter Stats Bar */}
+              <div style={{ display: 'flex', gap: '35px', marginBottom: '32px' }}>
+                <div>
+                  <span style={{ display: 'block', fontSize: '1.8rem', fontWeight: 900, color: 'white' }}>8+</span>
+                  <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Service Clusters</span>
                 </div>
-                <div style={{ padding: '24px' }}>
-                  <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#0f172a', marginBottom: '8px' }}>
-                    {tour.title}
-                  </h3>
-                  <p style={{ fontSize: '0.85rem', color: 'var(--lp-text-muted)', lineHeight: 1.5, marginBottom: '20px' }}>
-                    {tour.desc}
-                  </p>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid #f1f5f9', paddingTop: '14px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.8rem', fontWeight: 700, color: '#eab308' }}>
-                      <Star size={16} fill="#eab308" style={{ stroke: 'none' }} />
-                      {tour.rating}
+                <div>
+                  <span style={{ display: 'block', fontSize: '1.8rem', fontWeight: 900, color: 'white' }}>100%</span>
+                  <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Live OSM Data</span>
+                </div>
+                <div>
+                  <span style={{ display: 'block', fontSize: '1.8rem', fontWeight: 900, color: 'var(--accent-cyan)' }}>3-Tier</span>
+                  <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Mirror Failover</span>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap' }}>
+                <button className="btn btn-primary" onClick={() => navigate('/app')}>
+                  🚀 Launch Assistant
+                </button>
+                <button className="btn btn-secondary" onClick={() => scrollToSection('services')}>
+                  📍 Explore Services
+                </button>
+                <a 
+                  href="https://github.com/ayman-developer/Smart-tourist" 
+                  target="_blank" 
+                  rel="noreferrer" 
+                  className="btn btn-secondary"
+                >
+                  <ExternalLink size={16} /> GitHub Source
+                </a>
+              </div>
+            </div>
+
+            {/* Right Visual Graphic & Floating Badges */}
+            <div style={{ display: 'flex', justifyContent: 'center', position: 'relative' }}>
+              <div style={{ position: 'relative', width: '100%', maxWidth: '440px' }}>
+                
+                {/* Visual Glass Frame */}
+                <div className="glass" style={{ padding: '30px', borderRadius: '28px', border: '1px solid rgba(0, 229, 255, 0.25)', boxShadow: '0 20px 60px rgba(0, 0, 0, 0.7), 0 0 30px rgba(0, 229, 255, 0.15)' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <Radio size={18} color="var(--accent-cyan)" className="animate-pulse" />
+                      <span style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--accent-cyan)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Real-time Radar</span>
                     </div>
-                    <button 
-                      onClick={() => navigate('/app')}
-                      style={{
-                        background: 'transparent',
-                        border: 'none',
-                        color: 'var(--lp-primary)',
-                        fontWeight: 800,
-                        fontSize: '0.78rem',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '4px',
-                        cursor: 'pointer'
-                      }}
-                    >
-                      View Details <ChevronRight size={14} />
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600 }}>Overpass v0.7.62</span>
+                  </div>
+
+                  {/* Dark Map Vector Preview */}
+                  <div style={{ 
+                    height: '240px', 
+                    borderRadius: '16px', 
+                    overflow: 'hidden', 
+                    position: 'relative', 
+                    background: 'url("https://images.unsplash.com/photo-1524661135-423995f22d0b?w=800&q=80")',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    border: '1px solid var(--border-color)'
+                  }}>
+                    <div style={{ position: 'absolute', inset: 0, background: 'rgba(6, 8, 12, 0.75)' }}></div>
+                    
+                    {/* Simulated Map Markers */}
+                    <div style={{ position: 'absolute', top: '40%', left: '50%', transform: 'translate(-50%, -50%)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                      <span className="pulse-indicator" style={{ width: '14px', height: '14px' }}></span>
+                      <div style={{ background: 'var(--bg-primary)', padding: '4px 8px', borderRadius: '6px', fontSize: '0.65rem', fontWeight: 800, color: 'var(--accent-cyan)', border: '1px solid var(--accent-cyan)', marginTop: '6px' }}>
+                        Your Location
+                      </div>
+                    </div>
+
+                    <div style={{ position: 'absolute', top: '25%', left: '70%', background: 'rgba(0, 229, 255, 0.15)', border: '1px solid var(--accent-cyan)', borderRadius: '50%', padding: '6px' }}>
+                      <MapPin size={14} color="var(--accent-cyan)" />
+                    </div>
+                    <div style={{ position: 'absolute', bottom: '25%', left: '25%', background: 'rgba(0, 229, 255, 0.15)', border: '1px solid var(--accent-cyan)', borderRadius: '50%', padding: '6px' }}>
+                      <Utensils size={14} color="var(--accent-cyan)" />
+                    </div>
+                  </div>
+
+                  <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Coordinates: Coimbatore, TN</span>
+                    <button onClick={() => navigate('/app')} className="btn btn-primary btn-sm">
+                      Open Live Map
                     </button>
                   </div>
                 </div>
+
+                {/* Floating Micro Glass Badges */}
+                <div className="floating-badge badge-float-1" style={{ position: 'absolute', top: '-15px', left: '-20px' }}>
+                  <Zap size={16} color="var(--accent-cyan)" />
+                  <span>Sub-second Geocoding</span>
+                </div>
+
+                <div className="floating-badge badge-float-2" style={{ position: 'absolute', bottom: '40px', right: '-25px' }}>
+                  <ShieldCheck size={16} color="var(--accent-cyan)" />
+                  <span>100% Mirror Fallback</span>
+                </div>
+
+                <div className="floating-badge badge-float-3" style={{ position: 'absolute', bottom: '-20px', left: '20px' }}>
+                  <Navigation size={16} color="var(--accent-cyan)" />
+                  <span>Optimal Pathfinding AI</span>
+                </div>
+
               </div>
-            ))}
+            </div>
+
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Adventure & Travels Section */}
-        <section id="about-us" style={{ padding: '100px 6%' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '60px', alignItems: 'center' }}>
-            
-            {/* Left Text details */}
-            <div>
-              <span className="font-script">Adventure & Travels</span>
-              <h2 style={{ fontSize: '2.6rem', fontWeight: 900, color: '#0f172a', margin: '8px 0 16px 0', lineHeight: 1.15 }}>
-                Explore the World's Wonders With Us
-              </h2>
-              <p style={{ color: 'var(--lp-text-muted)', fontSize: '0.9rem', lineHeight: 1.6, marginBottom: '30px' }}>
-                Embark on a journey filled with breathtaking landscapes, thrilling experiences, and unforgettable memories. Whether you're an explorer or a leisure traveler, this is the perfect opportunity to discover the world's wonders.
-              </p>
+      {/* SECTION 2: SERVICES & MATRIX */}
+      <section id="services" className="section" style={{ background: 'rgba(13, 17, 26, 0.3)' }}>
+        <div className="container">
+          <div style={{ textAlign: 'center', marginBottom: '60px' }}>
+            <span className="section-subtitle">Categorized Intelligence</span>
+            <h2 className="section-title">Essential Services Matrix</h2>
+            <p style={{ color: 'var(--text-secondary)', maxWidth: '600px', margin: '0 auto', fontSize: '0.95rem' }}>
+              Instant localized discovery of amenities and emergency rescue outposts, structured with clean geocoding filters.
+            </p>
+          </div>
 
-              {/* Experience and details grid */}
-              <div style={{ display: 'flex', gap: '20px', marginBottom: '35px' }}>
-                <div style={{ 
-                  background: 'rgba(0, 167, 181, 0.1)', 
-                  color: 'var(--lp-primary)', 
-                  padding: '20px', 
-                  borderRadius: '20px',
-                  textAlign: 'center',
-                  minWidth: '140px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center'
-                }}>
-                  <span style={{ fontSize: '2rem', fontWeight: 900 }}>25+</span>
-                  <span style={{ fontSize: '0.72rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Years of Experience</span>
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                  <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
-                    <ShieldCheck size={18} color="var(--lp-primary)" style={{ marginTop: '2px', flexShrink: 0 }} />
-                    <div>
-                      <h4 style={{ margin: '0 0 2px 0', fontSize: '0.9rem', fontWeight: 800, color: '#0f172a' }}>Trusted travel guide</h4>
-                      <p style={{ margin: 0, fontSize: '0.78rem', color: 'var(--lp-text-muted)' }}>We supply high-end guide systems for safe exploration.</p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '20px' }}>
+            {categories.map((cat) => {
+              const Icon = cat.icon;
+              return (
+                <div key={cat.id} className="glass feature-card">
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                    <div className="feature-icon-wrapper">
+                      <Icon size={24} />
                     </div>
+                    <span className="feature-tag">{cat.tag}</span>
                   </div>
-                  <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
-                    <Eye size={18} color="var(--lp-primary)" style={{ marginTop: '2px', flexShrink: 0 }} />
-                    <div>
-                      <h4 style={{ margin: '0 0 2px 0', fontSize: '0.9rem', fontWeight: 800, color: '#0f172a' }}>Mission & Vision</h4>
-                      <p style={{ margin: 0, fontSize: '0.78rem', color: 'var(--lp-text-muted)' }}>Delivering localized intelligence and pathfinding globally.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
-                <button className="lp-btn-pill-primary" onClick={() => navigate('/app')}>
-                  Start Your Journey
-                </button>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <img 
-                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&q=80" 
-                    alt="Co-Founder" 
-                    style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} 
-                  />
                   <div>
-                    <h5 style={{ margin: 0, fontSize: '0.82rem', fontWeight: 800, color: '#0f172a' }}>Albert Flores</h5>
-                    <p style={{ margin: 0, fontSize: '0.7rem', color: 'var(--lp-text-muted)', fontWeight: 700 }}>Co-Founder</p>
+                    <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'white', marginBottom: '6px' }}>{cat.title}</h3>
+                    <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.6, margin: 0 }}>{cat.desc}</p>
+                  </div>
+                  <div style={{ paddingTop: '8px', borderTop: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600 }}>Instant Routing</span>
+                    <button 
+                      onClick={() => navigate('/app')}
+                      style={{ 
+                        color: 'var(--accent-cyan)', 
+                        fontSize: '0.8rem', 
+                        fontWeight: 700, 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        gap: '4px',
+                        background: 'none',
+                        border: 'none',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      Locate <ChevronRight size={14} />
+                    </button>
                   </div>
                 </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 3: ARCHITECTURE & HIGH AVAILABILITY */}
+      <section id="architecture" className="section">
+        <div className="container">
+          <div style={{ textAlign: 'center', marginBottom: '60px' }}>
+            <span className="section-subtitle">System Resilience</span>
+            <h2 className="section-title">Multi-Mirror Architecture</h2>
+            <p style={{ color: 'var(--text-secondary)', maxWidth: '600px', margin: '0 auto', fontSize: '0.95rem' }}>
+              Built with zero single-point-of-failure routing to withstand rate-limits and network timeouts.
+            </p>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px' }}>
+            
+            <div className="glass" style={{ padding: '28px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+                <div className="feature-icon-wrapper"><Cpu size={22} /></div>
+                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'white', margin: 0 }}>3-Tier Overpass Proxy</h3>
               </div>
+              <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+                Primary queries route through <code>overpass-api.de</code> with automated instantaneous failover to <code>overpass.kumi.systems</code> and <code>overpass.n.openstreetmap.de</code>.
+              </p>
             </div>
 
-            {/* Right Visual Image & Stats group */}
-            <div style={{ position: 'relative' }}>
-              <img 
-                src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800&q=80" 
-                alt="Travel Adventure" 
-                style={{ width: '100%', borderRadius: '32px', boxShadow: '0 20px 40px rgba(0,0,0,0.1)' }} 
-              />
-              {/* Stats list overlay box */}
-              <div style={{
-                position: 'absolute',
-                bottom: '-30px',
-                left: '30px',
-                background: 'white',
-                borderRadius: '24px',
-                padding: '24px',
-                boxShadow: '0 15px 35px rgba(0,0,0,0.08)',
-                border: '1px solid var(--lp-border)',
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: '20px',
-                minWidth: '280px'
-              }}>
-                <div>
-                  <h4 style={{ margin: 0, fontSize: '1.35rem', fontWeight: 900, color: 'var(--lp-primary)' }}>30K+</h4>
-                  <p style={{ margin: 0, fontSize: '0.7rem', color: 'var(--lp-text-muted)', fontWeight: 700 }}>Tour Success</p>
-                </div>
-                <div>
-                  <h4 style={{ margin: 0, fontSize: '1.35rem', fontWeight: 900, color: 'var(--lp-primary)' }}>5480+</h4>
-                  <p style={{ margin: 0, fontSize: '0.7rem', color: 'var(--lp-text-muted)', fontWeight: 700 }}>Happy Traveler</p>
-                </div>
-                <div>
-                  <h4 style={{ margin: 0, fontSize: '1.35rem', fontWeight: 900, color: 'var(--lp-primary)' }}>6,562+</h4>
-                  <p style={{ margin: 0, fontSize: '0.7rem', color: 'var(--lp-text-muted)', fontWeight: 700 }}>Awards Won</p>
-                </div>
-                <div>
-                  <h4 style={{ margin: 0, fontSize: '1.35rem', fontWeight: 900, color: 'var(--lp-primary)' }}>25+</h4>
-                  <p style={{ margin: 0, fontSize: '0.7rem', color: 'var(--lp-text-muted)', fontWeight: 700 }}>Our Experience</p>
-                </div>
+            <div className="glass" style={{ padding: '28px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+                <div className="feature-icon-wrapper"><Zap size={22} /></div>
+                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'white', margin: 0 }}>Smart Radius Expansion</h3>
               </div>
+              <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+                Dynamic proximity scoping starts at 10km and dynamically queries wider city coordinates to guarantee results for tourist spots and lodging.
+              </p>
+            </div>
 
-              {/* Floating text circle overlay */}
-              <div style={{
-                position: 'absolute',
-                top: '20px',
-                right: '-20px',
-                background: '#0ea5e9',
-                color: 'white',
-                width: '100px',
-                height: '100px',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '0.72rem',
-                fontWeight: 800,
-                textAlign: 'center',
-                boxShadow: '0 8px 16px rgba(14,165,233,0.3)',
-                lineHeight: 1.2,
-                padding: '10px'
-              }}>
-                Travel is a Journey
+            <div className="glass" style={{ padding: '28px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+                <div className="feature-icon-wrapper"><Globe size={22} /></div>
+                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'white', margin: 0 }}>Leaflet Dark Engine</h3>
               </div>
+              <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+                CartoDB dark vector tiles rendered with GPU-accelerated Leaflet map instances and custom glowing SVG marker pins.
+              </p>
             </div>
 
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* spacer for floating stats bar */}
-        <div style={{ height: '50px' }}></div>
-
-        {/* Special Offers Section */}
-        <section style={{ padding: '80px 6%', background: 'var(--lp-bg-alt)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '40px' }}>
-            <div>
-              <span className="font-script">Special Offers</span>
-              <h2 style={{ fontSize: '2.4rem', fontWeight: 900, color: '#0f172a', margin: '4px 0 0 0' }}>
-                Offers To Inspire You
-              </h2>
-            </div>
-            <div style={{ display: 'flex', gap: '10px' }}>
-              <button style={{ width: '40px', height: '40px', borderRadius: '50%', border: '1px solid #cbd5e1', background: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
-                <ChevronLeft size={16} />
-              </button>
-              <button style={{ width: '40px', height: '40px', borderRadius: '50%', border: 'none', background: 'var(--lp-primary)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
-                <ChevronRight size={16} />
-              </button>
-            </div>
+      {/* SECTION 4: REVIEWS & REPUTATION */}
+      <section id="reviews" className="section" style={{ background: 'rgba(13, 17, 26, 0.3)' }}>
+        <div className="container">
+          <div style={{ textAlign: 'center', marginBottom: '60px' }}>
+            <span className="section-subtitle">User Testimonials</span>
+            <h2 className="section-title">Trusted By Travelers</h2>
           </div>
 
-          <div className="offers-grid">
-            {inspiredOffers.map((off, idx) => (
-              <div key={idx} className="offer-card">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '30px' }}>
-                  <span style={{ fontSize: '2.5rem', fontWeight: 900, color: 'var(--lp-primary)' }}>{off.discount} Off</span>
-                  <span style={{ background: 'rgba(255,255,255,0.08)', padding: '4px 10px', borderRadius: '10px', fontSize: '0.65rem', textTransform: 'uppercase' }}>
-                    {off.date}
-                  </span>
-                </div>
-                <h4 style={{ fontSize: '1rem', fontWeight: 700, lineHeight: 1.4, margin: '0 0 10px 0' }}>
-                  {off.title}
-                </h4>
-                <p style={{ margin: 0, fontSize: '0.75rem', opacity: 0.6 }}>Terms and conditions apply.</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Testimonial Section */}
-        <section id="testimonial" style={{ padding: '80px 6%' }}>
-          <div style={{ textAlign: 'center', marginBottom: '50px' }}>
-            <span className="font-script">Our Testimonials</span>
-            <h2 style={{ fontSize: '2.4rem', fontWeight: 900, color: '#0f172a', margin: '4px 0 0 0' }}>
-              What They Are Talking About
-            </h2>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
             {[
-              { name: 'Diana Meadows', desc: 'The route mapping and live search saved us hours during our road trip in Coimbatore. Highly recommended!', role: 'Tourist' },
-              { name: 'Jacob Jones', desc: 'Fabulous UX layout, super professional, fast and easy to navigate all categories in one click.', role: 'Explorer' },
-              { name: 'Albert Flores', desc: 'The offline mirrors and Leaflet geolocators worked beautifully even on local roads.', role: 'Traveler' }
-            ].map((item, idx) => (
-              <div key={idx} style={{ background: 'white', border: '1px solid var(--lp-border)', borderRadius: '20px', padding: '24px', position: 'relative' }}>
-                <div style={{ display: 'flex', gap: '2px', color: '#f59e0b', marginBottom: '14px' }}>
-                  {[...Array(5)].map((_, i) => <Star key={i} size={15} fill="#f59e0b" style={{ stroke: 'none' }} />)}
+              { name: 'Diana Meadows', role: 'Explorer', text: 'The multi-mirror fallback and instant petrol station identification saved us hours during a road trip across Tamil Nadu.' },
+              { name: 'Jacob Jones', role: 'Digital Nomad', text: 'The neon cyan UI and glassmorphism interface feels like a futuristic concierge. Everything loads fast with zero lag.' },
+              { name: 'Albert Flores', role: 'Tech Enthusiast', text: 'The route optimization algorithm with interactive Leaflet polylines is brilliantly built. Super reliable.' }
+            ].map((rev, idx) => (
+              <div key={idx} className="glass" style={{ padding: '24px' }}>
+                <div style={{ display: 'flex', gap: '3px', color: 'var(--accent-cyan)', marginBottom: '14px' }}>
+                  {[...Array(5)].map((_, i) => <Star key={i} size={15} fill="var(--accent-cyan)" style={{ stroke: 'none' }} />)}
                 </div>
-                <p style={{ fontSize: '0.85rem', color: 'var(--lp-text-muted)', lineHeight: 1.6, marginBottom: '20px' }}>
-                  "{item.desc}"
+                <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '18px' }}>
+                  "{rev.text}"
                 </p>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <img 
-                    src={`https://images.unsplash.com/photo-${1534528741775 + idx}-53994a69daeb?w=80&q=80`} 
-                    alt={item.name} 
-                    style={{ width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover' }} 
-                  />
-                  <div>
-                    <h5 style={{ margin: 0, fontSize: '0.8rem', fontWeight: 800, color: '#0f172a' }}>{item.name}</h5>
-                    <p style={{ margin: 0, fontSize: '0.68rem', color: 'var(--lp-text-muted)' }}>{item.role}</p>
-                  </div>
+                <div>
+                  <h4 style={{ margin: 0, fontSize: '0.9rem', fontWeight: 800, color: 'white' }}>{rev.name}</h4>
+                  <span style={{ fontSize: '0.72rem', color: 'var(--accent-cyan)', fontWeight: 600 }}>{rev.role}</span>
                 </div>
               </div>
             ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Recent Articles Section */}
-        <section id="blog" style={{ padding: '80px 6%', background: 'var(--lp-bg-alt)' }}>
-          <div style={{ textAlign: 'center', marginBottom: '50px' }}>
-            <span className="font-script">Our Blog Offer</span>
-            <h2 style={{ fontSize: '2.4rem', fontWeight: 900, color: '#0f172a', margin: '4px 0 0 0' }}>
-              Recent Articles & Posts
-            </h2>
+      {/* SECTION 5: CONTACT & INQUIRY */}
+      <section id="contact" className="section">
+        <div className="container" style={{ maxWidth: '680px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+            <span className="section-subtitle">Get In Touch</span>
+            <h2 className="section-title">Contact Developer</h2>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem' }}>
+              Have suggestions or feature requests for TouristAI? Send a message directly.
+            </p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px' }}>
-            {blogPosts.map((post, idx) => (
-              <div key={idx} className="blog-card">
-                <div style={{ height: '200px', overflow: 'hidden', position: 'relative' }}>
-                  <img src={post.image} alt={post.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                  <span style={{
-                    position: 'absolute',
-                    top: '16px',
-                    right: '16px',
-                    background: 'var(--lp-primary)',
-                    color: 'white',
-                    padding: '6px 12px',
-                    borderRadius: '10px',
-                    fontSize: '0.7rem',
-                    fontWeight: 800
-                  }}>
-                    {post.date}
-                  </span>
-                </div>
-                <div style={{ padding: '20px' }}>
-                  <span style={{ fontSize: '0.72rem', color: 'var(--lp-text-muted)', fontWeight: 800, textTransform: 'uppercase' }}>
-                    {post.author}
-                  </span>
-                  <h4 style={{ fontSize: '1rem', fontWeight: 800, color: '#0f172a', margin: '6px 0 14px 0', lineHeight: 1.4 }}>
-                    {post.title}
-                  </h4>
-                  <button 
-                    onClick={() => navigate('/app')}
-                    style={{
-                      background: 'transparent',
-                      border: 'none',
-                      color: 'var(--lp-primary)',
-                      fontWeight: 800,
-                      fontSize: '0.75rem',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '4px'
-                    }}
-                  >
-                    Read More <ArrowRight size={12} />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Tour Gallery Section */}
-        <section style={{ padding: '80px 6%' }}>
-          <div style={{ textAlign: 'center', marginBottom: '50px' }}>
-            <span className="font-script">Our Tour Photo Gallery</span>
-            <h2 style={{ fontSize: '2.4rem', fontWeight: 900, color: '#0f172a', margin: '4px 0 0 0' }}>
-              Recent Gallery
-            </h2>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '20px' }}>
-            {galleryImages.map((img, idx) => (
-              <div key={idx} style={{ height: '180px', borderRadius: '18px', overflow: 'hidden', boxShadow: '0 4px 10px rgba(0,0,0,0.03)' }}>
-                <img 
-                  src={img} 
-                  alt="Travel Gallery" 
-                  style={{ 
-                    width: '100%', 
-                    height: '100%', 
-                    objectFit: 'cover',
-                    transition: 'transform 0.4s ease'
-                  }} 
-                  onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.06)'}
-                  onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
-                />
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Footer Container */}
-        <footer style={{ 
-          borderTop: '1px solid var(--lp-border)', 
-          padding: '5rem 6% 2rem', 
-          background: 'white'
-        }}>
-          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: '3rem', marginBottom: '4rem' }}>
+          <form onSubmit={handleContactSubmit} className="glass" style={{ padding: '36px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '1rem' }}>
-                <Compass size={22} color="var(--lp-primary)" />
-                <span style={{ fontWeight: 800, fontSize: '1.1rem', color: '#0f172a' }}>TravelGo</span>
-              </div>
-              <p style={{ color: 'var(--lp-text-muted)', maxWidth: '280px', fontSize: '0.82rem', lineHeight: 1.6 }}>
-                A high-end visual mapping assistant for modern travelers, designed with aesthetic elegance and clean functional interfaces.
-              </p>
+              <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '6px', textTransform: 'uppercase' }}>Your Name</label>
+              <input type="text" placeholder="John Doe" required className="glass-input" />
             </div>
-            
-            <div style={{ display: 'flex', gap: '4rem' }}>
-              <div>
-                <h4 style={{ marginBottom: '1.2rem', fontWeight: 800, fontSize: '0.85rem', color: '#0f172a', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Explore</h4>
-                <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '0.8rem', color: 'var(--lp-text-muted)' }}>
-                  <li><span style={{ cursor: 'pointer' }} onClick={() => window.scrollTo(0,0)}>Home</span></li>
-                  <li><span style={{ cursor: 'pointer' }} onClick={() => navigate('/app')}>Launch Dashboard</span></li>
-                </ul>
-              </div>
-              <div>
-                <h4 style={{ marginBottom: '1.2rem', fontWeight: 800, fontSize: '0.85rem', color: '#0f172a', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Social</h4>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '0.8rem', color: 'var(--lp-text-muted)' }}>
-                  <a href="#" style={{ color: 'inherit', textDecoration: 'none' }}>Twitter</a>
-                  <a href="https://github.com/ayman-developer/Smart-tourist" target="_blank" rel="noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>GitHub</a>
-                  <a href="#" style={{ color: 'inherit', textDecoration: 'none' }}>Instagram</a>
-                </div>
-              </div>
+            <div>
+              <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '6px', textTransform: 'uppercase' }}>Your Email</label>
+              <input type="email" placeholder="john@example.com" required className="glass-input" />
             </div>
-          </div>
-          
-          <div style={{ 
-            textAlign: 'center', 
-            opacity: 0.5, 
-            fontSize: '0.72rem', 
-            letterSpacing: '0.05em',
-            textTransform: 'uppercase',
-            borderTop: '1px solid #f1f5f9',
-            paddingTop: '20px',
-            color: 'var(--lp-text-muted)'
-          }}>
-            &copy; {new Date().getFullYear()} TravelGo. Made with precision and elegance.
-          </div>
-        </footer>
+            <div>
+              <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '6px', textTransform: 'uppercase' }}>Message / Suggestion</label>
+              <textarea placeholder="Write your message here..." rows={4} required className="glass-input" style={{ resize: 'vertical' }}></textarea>
+            </div>
+            <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: '8px' }}>
+              <Mail size={16} /> Send Message
+            </button>
+          </form>
+        </div>
+      </section>
 
-      </div>
+      {/* FOOTER */}
+      <footer style={{ borderTop: '1px solid var(--border-color)', padding: '50px 0 30px', background: 'rgba(6, 8, 12, 0.95)' }}>
+        <div className="container" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '20px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <Compass size={22} color="var(--accent-cyan)" />
+            <span style={{ fontWeight: 900, fontSize: '1.1rem', color: 'white' }}>Tourist<span className="logo-accent">AI</span></span>
+          </div>
+
+          <div style={{ display: 'flex', gap: '24px', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+            <button onClick={() => scrollToSection('about')} style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer' }}>About</button>
+            <button onClick={() => scrollToSection('services')} style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer' }}>Services</button>
+            <button onClick={() => scrollToSection('architecture')} style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer' }}>Architecture</button>
+            <button onClick={() => navigate('/app')} style={{ background: 'none', border: 'none', color: 'var(--accent-cyan)', cursor: 'pointer', fontWeight: 700 }}>Open App</button>
+          </div>
+
+          <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+            &copy; {new Date().getFullYear()} Ayman A. Smart Tourist Assistant.
+          </div>
+        </div>
+      </footer>
+
     </div>
   );
 };
