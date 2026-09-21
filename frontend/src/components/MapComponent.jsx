@@ -6,13 +6,19 @@ import { Volume2, Globe, Navigation, Star, MapPin } from 'lucide-react';
 
 const categoryColorMap = {
   tourist: '#8B5CF6',
-  hotel: '#F59E0B',
+  nature: '#10B981',
   restaurant: '#F43F5E',
-  hospital: '#10B981',
-  petrol: '#0EA5E9',
-  mechanic: '#F97316',
+  shopping: '#EC4899',
+  hotel: '#F59E0B',
+  coworking: '#0EA5E9',
+  business_hotel: '#F59E0B',
+  transit: '#8B5CF6',
   atm: '#14B8A6',
-  transit: '#EC4899'
+  hospital: '#10B981',
+  pharmacy: '#06B6D4',
+  police: '#6366F1',
+  petrol: '#0EA5E9',
+  mechanic: '#F97316'
 };
 
 // Generate multi-colored custom SVG markers

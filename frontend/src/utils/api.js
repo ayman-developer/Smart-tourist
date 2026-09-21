@@ -159,8 +159,9 @@ export const getDrivingRoute = async (points) => {
   }
 };
 
-// Rich Curated Fallback Spots for Guaranteed Visual Quality & Fast Loading
+// Comprehensive Fallback Spots across Leisure, Business, and Emergency Modes
 const fallbackSpots = {
+  // --- LEISURE & VACATION MODE ---
   tourist: [
     {
       id: 101,
@@ -197,30 +198,79 @@ const fallbackSpots = {
       offsetLat: -0.012,
       offsetLng: 0.025,
       audioStory: 'Showcases antique British, German, American, and Indian automobiles spanning over 100 years of global mechanical evolution.'
-    },
+    }
+  ],
+  nature: [
     {
-      id: 104,
+      id: 151,
       name: 'Valankulam Lake Promenade & Sunset Point',
       address: 'Trichy Road, Sungam Bypass',
-      rating: '4.6',
+      rating: '4.7',
       image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80',
       crowdStatus: 'Moderate Crowd',
       bestTimeSlot: '5:00 PM - 7:00 PM',
       offsetLat: -0.024,
       offsetLng: 0.015,
-      audioStory: 'A revitalized urban lake with floating walking decks, LED illuminated fountains, and a panoramic sunset vista over the lake.'
+      audioStory: 'A revitalized urban lake with floating walking decks, LED illuminated fountains, and a panoramic sunset vista over the water.'
     },
     {
-      id: 105,
-      name: 'VOC Park & Botanical Gardens',
+      id: 152,
+      name: 'VOC Botanical Gardens & Bird Park',
       address: 'Jail Road, Park Gate, Gopalapuram',
-      rating: '4.5',
+      rating: '4.6',
       image: 'https://images.unsplash.com/photo-1519331379826-f10be5486c6f?w=600&q=80',
-      crowdStatus: 'Moderate Crowd',
+      crowdStatus: 'Low Crowd (Best Time)',
       bestTimeSlot: '4:00 PM - 6:30 PM',
       offsetLat: 0.005,
       offsetLng: 0.008,
-      audioStory: 'A family-friendly botanical haven with lush tree canopies, toy train rides, and shaded pathways named after freedom fighter V.O. Chidambaram.'
+      audioStory: 'A family-friendly botanical haven with lush tree canopies, toy train rides, and shaded pathways.'
+    },
+    {
+      id: 153,
+      name: 'Kovai Kutralam Waterfalls',
+      address: 'Siruvani Hills Reserve Forest',
+      rating: '4.8',
+      image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=600&q=80',
+      crowdStatus: 'Moderate Crowd',
+      bestTimeSlot: '9:00 AM - 2:00 PM',
+      offsetLat: 0.065,
+      offsetLng: -0.078,
+      audioStory: 'A pristine waterfall nestled inside the Siruvani rainforest, known for sweet mineral waters and rainforest biodiversity.'
+    }
+  ],
+  shopping: [
+    {
+      id: 181,
+      name: 'Brookefields Grand Shopping Mall',
+      address: 'Dr Krishnasamy Mudaliar Rd, Sukrawar Pettai',
+      rating: '4.7',
+      image: 'https://images.unsplash.com/photo-1567449303183-ae0d6ed1498e?w=600&q=80',
+      crowdStatus: 'Peak Rush',
+      bestTimeSlot: '11:00 AM - 9:00 PM',
+      offsetLat: 0.008,
+      offsetLng: -0.005
+    },
+    {
+      id: 182,
+      name: 'Pothys Silk Emporium & Traditional Sarees',
+      address: 'Cross Cut Road, Gandhipuram',
+      rating: '4.8',
+      image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=600&q=80',
+      crowdStatus: 'Moderate Crowd',
+      bestTimeSlot: '10:00 AM - 8:30 PM',
+      offsetLat: 0.019,
+      offsetLng: 0.014
+    },
+    {
+      id: 183,
+      name: 'Prozone Luxury Lifestyle Mall',
+      address: 'SF 201, Sathy Road, Saravanampatti',
+      rating: '4.6',
+      image: 'https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?w=600&q=80',
+      crowdStatus: 'Moderate Crowd',
+      bestTimeSlot: '12:00 PM - 9:30 PM',
+      offsetLat: 0.045,
+      offsetLng: 0.038
     }
   ],
   hotel: [
@@ -245,17 +295,6 @@ const fallbackSpots = {
       bestTimeSlot: '24/7 Check-in',
       offsetLat: 0.025,
       offsetLng: 0.045
-    },
-    {
-      id: 203,
-      name: 'Welcomhotel by ITC Hotels',
-      address: 'Race Course Road, Gopalapuram',
-      rating: '4.8',
-      image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=600&q=80',
-      crowdStatus: 'Moderate Crowd',
-      bestTimeSlot: '24/7 Check-in',
-      offsetLat: -0.015,
-      offsetLng: 0.012
     }
   ],
   restaurant: [
@@ -302,6 +341,131 @@ const fallbackSpots = {
       offsetLng: -0.028
     }
   ],
+
+  // --- BUSINESS & PROFESSIONAL MODE ---
+  coworking: [
+    {
+      id: 351,
+      name: 'Workflo by Innov8 Coworking Hub',
+      address: 'Avinashi Road, Lakshmi Mills Junction',
+      rating: '4.8',
+      image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&q=80',
+      crowdStatus: 'Low Crowd (Best Time)',
+      bestTimeSlot: '24/7 Access (High Speed Wi-Fi)',
+      offsetLat: 0.014,
+      offsetLng: 0.024
+    },
+    {
+      id: 352,
+      name: 'Starbucks Coffee & Work Lounge',
+      address: 'Race Course Road, Gopalapuram',
+      rating: '4.7',
+      image: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=600&q=80',
+      signatureDish: 'Java Chip Frappuccino & Almond Biscotti',
+      dishPrice: '₹340',
+      dietType: 'Cafe',
+      crowdStatus: 'Moderate Crowd',
+      bestTimeSlot: '8:00 AM - 11:00 PM (Power Sockets)',
+      offsetLat: -0.011,
+      offsetLng: 0.014
+    },
+    {
+      id: 353,
+      name: 'Regus Executive Business Suites',
+      address: 'Tristar Towers, Avinashi Road',
+      rating: '4.8',
+      image: 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=600&q=80',
+      crowdStatus: 'Low Crowd (Best Time)',
+      bestTimeSlot: '9:00 AM - 7:00 PM (Meeting Rooms)',
+      offsetLat: 0.022,
+      offsetLng: 0.035
+    }
+  ],
+  business_hotel: [
+    {
+      id: 371,
+      name: 'Welcomhotel by ITC (Conference Center)',
+      address: 'Race Course Road, Gopalapuram',
+      rating: '4.9',
+      image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=600&q=80',
+      crowdStatus: 'Low Crowd (Best Time)',
+      bestTimeSlot: '24/7 Corporate Concierge',
+      offsetLat: -0.015,
+      offsetLng: 0.012
+    },
+    {
+      id: 372,
+      name: 'Le Meridien 5-Star Business Tower',
+      address: '762 Avinashi Road, Neelambur',
+      rating: '4.8',
+      image: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=600&q=80',
+      crowdStatus: 'Moderate Crowd',
+      bestTimeSlot: '24/7 Check-in',
+      offsetLat: 0.048,
+      offsetLng: 0.082
+    }
+  ],
+  transit: [
+    {
+      id: 801,
+      name: 'Coimbatore International Airport (CJB)',
+      address: 'Airport Road, Peelamedu',
+      rating: '4.8',
+      image: 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=600&q=80',
+      crowdStatus: 'Moderate Crowd',
+      bestTimeSlot: '24/7 Flights & Prepaid Cabs',
+      offsetLat: 0.032,
+      offsetLng: 0.068
+    },
+    {
+      id: 802,
+      name: 'Coimbatore Central Railway Junction',
+      address: 'Station Road, Gopalapuram',
+      rating: '4.7',
+      image: 'https://images.unsplash.com/photo-1532105956626-9569c03602f6?w=600&q=80',
+      crowdStatus: 'Moderate Crowd',
+      bestTimeSlot: '24/7 Active',
+      offsetLat: -0.008,
+      offsetLng: 0.005
+    },
+    {
+      id: 803,
+      name: 'Gandhipuram Central Express Bus Hub',
+      address: 'Cross Cut Road, Gandhipuram',
+      rating: '4.6',
+      image: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600&q=80',
+      crowdStatus: 'Peak Rush',
+      bestTimeSlot: '24/7 Active',
+      offsetLat: 0.016,
+      offsetLng: 0.012
+    }
+  ],
+  atm: [
+    {
+      id: 701,
+      name: 'State Bank of India (24/7 Cash & Forex)',
+      address: 'DB Road, R.S. Puram',
+      rating: '4.7',
+      image: 'https://images.unsplash.com/photo-1601597111158-2fceff292cdc?w=600&q=80',
+      crowdStatus: 'Low Crowd (Best Time)',
+      bestTimeSlot: '24/7 Cash Terminal',
+      offsetLat: 0.014,
+      offsetLng: -0.022
+    },
+    {
+      id: 702,
+      name: 'HDFC Bank Forex & ATM Terminal',
+      address: 'Avinashi Road, Anna Silai Junction',
+      rating: '4.8',
+      image: 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=600&q=80',
+      crowdStatus: 'Low Crowd (Best Time)',
+      bestTimeSlot: '24/7 Active',
+      offsetLat: 0.008,
+      offsetLng: 0.015
+    }
+  ],
+
+  // --- EMERGENCY & SAFE HAVEN MODE ---
   hospital: [
     {
       id: 401,
@@ -310,7 +474,7 @@ const fallbackSpots = {
       rating: '4.8',
       image: 'https://images.unsplash.com/photo-1587351021759-3e566b6af7cc?w=600&q=80',
       crowdStatus: 'Low Crowd (Best Time)',
-      bestTimeSlot: '24/7 Emergency',
+      bestTimeSlot: '24/7 Emergency ICU',
       offsetLat: 0.035,
       offsetLng: 0.055
     },
@@ -324,6 +488,54 @@ const fallbackSpots = {
       bestTimeSlot: '24/7 Emergency',
       offsetLat: 0.028,
       offsetLng: 0.048
+    }
+  ],
+  pharmacy: [
+    {
+      id: 451,
+      name: 'Apollo 24/7 Pharmacy & Emergency Meds',
+      address: 'Cross Cut Road, Gandhipuram',
+      rating: '4.8',
+      image: 'https://images.unsplash.com/photo-1586015555751-63c25b34914c?w=600&q=80',
+      crowdStatus: 'Low Crowd (Best Time)',
+      bestTimeSlot: '24/7 Open',
+      offsetLat: 0.017,
+      offsetLng: 0.013
+    },
+    {
+      id: 452,
+      name: 'MedPlus 24-Hour Medical Store',
+      address: 'DB Road, R.S. Puram',
+      rating: '4.7',
+      image: 'https://images.unsplash.com/photo-1576602976047-174e57a47881?w=600&q=80',
+      crowdStatus: 'Low Crowd (Best Time)',
+      bestTimeSlot: '24/7 Open',
+      offsetLat: 0.013,
+      offsetLng: -0.024
+    }
+  ],
+  police: [
+    {
+      id: 481,
+      name: 'Coimbatore City Police Commissioner Office',
+      address: 'Old Jail Road, Gopalapuram',
+      rating: '4.8',
+      image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=600&q=80',
+      crowdStatus: 'Low Crowd (Best Time)',
+      bestTimeSlot: '24/7 Helpline 100/112',
+      offsetLat: 0.002,
+      offsetLng: 0.006
+    },
+    {
+      id: 482,
+      name: 'B2 R.S. Puram Police Station & Tourist Desk',
+      address: 'Diwan Bahadur Road, R.S. Puram',
+      rating: '4.7',
+      image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=600&q=80',
+      crowdStatus: 'Low Crowd (Best Time)',
+      bestTimeSlot: '24/7 Active',
+      offsetLat: 0.016,
+      offsetLng: -0.026
     }
   ],
   petrol: [
@@ -362,67 +574,36 @@ const fallbackSpots = {
       offsetLat: 0.032,
       offsetLng: -0.012
     }
-  ],
-  atm: [
-    {
-      id: 701,
-      name: 'State Bank of India (24/7 Cash Terminal)',
-      address: 'DB Road, R.S. Puram',
-      rating: '4.7',
-      image: 'https://images.unsplash.com/photo-1601597111158-2fceff292cdc?w=600&q=80',
-      crowdStatus: 'Low Crowd (Best Time)',
-      bestTimeSlot: '24/7 Open',
-      offsetLat: 0.014,
-      offsetLng: -0.022
-    }
-  ],
-  transit: [
-    {
-      id: 801,
-      name: 'Coimbatore Central Railway Junction',
-      address: 'Station Road, Gopalapuram',
-      rating: '4.7',
-      image: 'https://images.unsplash.com/photo-1532105956626-9569c03602f6?w=600&q=80',
-      crowdStatus: 'Moderate Crowd',
-      bestTimeSlot: '24/7 Active',
-      offsetLat: -0.008,
-      offsetLng: 0.005
-    },
-    {
-      id: 802,
-      name: 'Gandhipuram Central Bus Terminal',
-      address: 'Cross Cut Road, Gandhipuram',
-      rating: '4.6',
-      image: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600&q=80',
-      crowdStatus: 'Peak Rush',
-      bestTimeSlot: '24/7 Active',
-      offsetLat: 0.016,
-      offsetLng: 0.012
-    }
   ]
 };
 
 // Nearby Search using Overpass API with Rich Fallback Guard
 export const getNearbyPlaces = async (lat, lng, category) => {
   const categoryMap = {
-    petrol: 'amenity=fuel',
+    tourist: 'tourism~"attraction|museum|viewpoint|theme_park"',
+    nature: 'leisure~"park|nature_reserve"',
+    shopping: 'shop~"mall|department_store|clothes"',
     hotel: 'tourism=hotel',
-    restaurant: 'amenity=restaurant',
-    mechanic: 'amenity=car_repair',
-    tourist: 'tourism',
-    hospital: 'amenity=hospital',
+    restaurant: 'amenity~"restaurant|cafe"',
+    coworking: 'amenity~"coworking_space|cafe"',
+    business_hotel: 'tourism=hotel',
+    transit: 'amenity~"bus_station|train_station"',
     atm: 'amenity=atm',
-    transit: 'amenity=bus_station'
+    hospital: 'amenity=hospital',
+    pharmacy: 'amenity=pharmacy',
+    police: 'amenity=police',
+    petrol: 'amenity=fuel',
+    mechanic: 'amenity=car_repair'
   };
 
   const tag = categoryMap[category] || 'tourism';
-  const radius = category === 'tourist' ? 45000 : 8000;
+  const radius = category === 'tourist' || category === 'nature' ? 45000 : 9000;
 
   const query = `
     [out:json][timeout:15];
     (
-      node[${category === 'tourist' ? '"tourism"~"attraction|museum|viewpoint|theme_park"' : tag}](around:${radius},${lat},${lng});
-      way[${category === 'tourist' ? '"tourism"~"attraction|museum|viewpoint|theme_park"' : tag}](around:${radius},${lat},${lng});
+      node[${tag}](around:${radius},${lat},${lng});
+      way[${tag}](around:${radius},${lat},${lng});
     );
     out center 25;
   `;
@@ -437,6 +618,7 @@ export const getNearbyPlaces = async (lat, lng, category) => {
     if (response.ok) {
       const data = await response.json();
       if (data && data.elements && data.elements.length > 0) {
+        const fallbackList = fallbackSpots[category] || fallbackSpots.tourist;
         const mapped = data.elements.map((element, idx) => {
           const tags = element.tags || {};
           const pLat = element.lat || (element.center && element.center.lat) || lat;
@@ -444,7 +626,6 @@ export const getNearbyPlaces = async (lat, lng, category) => {
           const dist = calculateDistance(lat, lng, pLat, pLng);
           const rawName = tags.name || tags['name:en'] || tags.brand || `${category.charAt(0).toUpperCase() + category.slice(1)} Spot`;
 
-          const fallbackList = fallbackSpots[category] || fallbackSpots.tourist;
           const fallbackItem = fallbackList[idx % fallbackList.length];
 
           return {
@@ -457,9 +638,9 @@ export const getNearbyPlaces = async (lat, lng, category) => {
             rating: fallbackItem.rating || (4.5 + (idx % 4) * 0.1).toFixed(1),
             distance: parseFloat(dist.toFixed(1)),
             image: fallbackItem.image,
-            signatureDish: category === 'restaurant' ? (fallbackItem.signatureDish || 'Special South Indian Platter') : null,
-            dishPrice: category === 'restaurant' ? (fallbackItem.dishPrice || '₹180') : null,
-            dietType: category === 'restaurant' ? (fallbackItem.dietType || 'Pure Veg') : null,
+            signatureDish: category === 'restaurant' || category === 'coworking' ? (fallbackItem.signatureDish || null) : null,
+            dishPrice: category === 'restaurant' || category === 'coworking' ? (fallbackItem.dishPrice || null) : null,
+            dietType: category === 'restaurant' || category === 'coworking' ? (fallbackItem.dietType || null) : null,
             crowdStatus: fallbackItem.crowdStatus || 'Moderate Crowd',
             bestTimeSlot: fallbackItem.bestTimeSlot || '9:00 AM - 6:00 PM',
             streetViewUrl: `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${pLat},${pLng}`,

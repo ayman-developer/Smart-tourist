@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Fuel, 
   Hotel, 
@@ -15,23 +15,49 @@ import {
   Volume2,
   Globe,
   Sparkles,
-  Eye,
+  ShoppingBag,
+  Laptop,
+  Briefcase,
+  Trees,
+  ShieldCheck,
+  Building2,
+  Pill,
   Search,
   ChevronRight,
-  TrendingUp
+  Sun
 } from 'lucide-react';
 import WeatherWidget from './WeatherWidget';
 
-const categories = [
-  { id: 'tourist', label: 'Attractions', icon: MapPin, color: '#8B5CF6' },
-  { id: 'hotel', label: 'Lodgings', icon: Hotel, color: '#F59E0B' },
-  { id: 'restaurant', label: 'Restaurants', icon: Utensils, color: '#F43F5E' },
-  { id: 'hospital', label: 'Hospitals', icon: HeartPulse, color: '#10B981' },
-  { id: 'petrol', label: 'Fuel & EV', icon: Fuel, color: '#0EA5E9' },
-  { id: 'mechanic', label: 'Mechanics', icon: Wrench, color: '#F97316' },
-  { id: 'atm', label: 'ATMs & Cash', icon: DollarSign, color: '#14B8A6' },
-  { id: 'transit', label: 'Transit', icon: Train, color: '#EC4899' }
+// 3 Core Tourist Trip Modes
+const tripModes = [
+  { id: 'leisure', label: '🌴 Leisure', desc: 'Vacation, Sights & Culture', color: '#8B5CF6' },
+  { id: 'business', label: '💼 Business', desc: 'Work, Cafes & Transit', color: '#0EA5E9' },
+  { id: 'emergency', label: '🚨 Safe Haven', desc: '24/7 Medical, Police & Auto', color: '#F43F5E' }
 ];
+
+// Mode-Specific Category Definitions
+const modeCategories = {
+  leisure: [
+    { id: 'tourist', label: 'Attractions', icon: MapPin, color: '#8B5CF6' },
+    { id: 'nature', label: 'Nature & Views', icon: Trees, color: '#10B981' },
+    { id: 'restaurant', label: 'Dining & Cafes', icon: Utensils, color: '#F43F5E' },
+    { id: 'shopping', label: 'Shopping & Silk', icon: ShoppingBag, color: '#EC4899' },
+    { id: 'hotel', label: 'Resorts & Stays', icon: Hotel, color: '#F59E0B' }
+  ],
+  business: [
+    { id: 'coworking', label: 'Cowork & Cafes', icon: Laptop, color: '#0EA5E9' },
+    { id: 'business_hotel', label: 'Business Hotels', icon: Building2, color: '#F59E0B' },
+    { id: 'transit', label: 'Air & Rail Transit', icon: Train, color: '#8B5CF6' },
+    { id: 'atm', label: 'Cash & Forex', icon: DollarSign, color: '#14B8A6' }
+  ],
+  emergency: [
+    { id: 'hospital', label: '24/7 Hospitals', icon: HeartPulse, color: '#10B981' },
+    { id: 'pharmacy', label: 'Pharmacies', icon: Pill, color: '#06B6D4' },
+    { id: 'police', label: 'Police Stations', icon: ShieldCheck, color: '#8B5CF6' },
+    { id: 'petrol', label: 'Fuel & EV Fast', icon: Fuel, color: '#0EA5E9' },
+    { id: 'mechanic', label: 'Auto Mechanics', icon: Wrench, color: '#F97316' }
+  ]
+};
 
 const Sidebar = ({ 
   activeCategory, 
@@ -50,8 +76,22 @@ const Sidebar = ({
   onOpenVirtual,
   onOpenNavDrawer
 }) => {
+  const [currentMode, setCurrentMode] = useState('leisure');
   const [searchQuery, setSearchQuery] = useState('');
   const [dietFilter, setDietFilter] = useState('All');
+
+  const availableCategories = modeCategories[currentMode] || modeCategories.leisure;
+
+  // Handle Mode Change
+  const handleModeChange = (modeId) => {
+    setCurrentMode(modeId);
+    const newCategories = modeCategories[modeId];
+    if (newCategories && newCategories.length > 0) {
+      setActiveCategory(newCategories[0].id);
+    }
+    setSearchQuery('');
+    onPoiSelect(null);
+  };
 
   const filteredPois = pois.filter(poi => {
     const matchesSearch = poi.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -63,17 +103,17 @@ const Sidebar = ({
     return matchesSearch;
   });
 
-  const activeCategoryMeta = categories.find(c => c.id === activeCategory) || categories[0];
+  const activeCategoryMeta = availableCategories.find(c => c.id === activeCategory) || availableCategories[0] || { color: '#8B5CF6', label: 'Places' };
 
   return (
     <div className="glass-panel" style={{
-      width: '400px',
+      width: '410px',
       height: 'calc(100vh - 40px)',
       margin: '20px 10px 20px 20px',
       padding: '22px',
       display: 'flex',
       flexDirection: 'column',
-      gap: '14px',
+      gap: '12px',
       position: 'relative',
       overflow: 'hidden',
       zIndex: 10,
@@ -82,10 +122,10 @@ const Sidebar = ({
       
       {/* Brand Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <div style={{ 
             background: 'var(--primary-gradient)',
-            padding: '9px',
+            padding: '8px',
             borderRadius: '12px',
             display: 'flex',
             boxShadow: '0 8px 20px rgba(99, 102, 241, 0.45)'
@@ -115,14 +155,14 @@ const Sidebar = ({
           </div>
         </div>
 
-        {/* 1-Tap SOS Button */}
+        {/* Quick SOS Trigger */}
         <button 
           onClick={onOpenSos}
           style={{
             background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)',
             color: 'white',
             border: 'none',
-            padding: '7px 14px',
+            padding: '6px 12px',
             borderRadius: '20px',
             fontSize: '0.74rem',
             fontWeight: 800,
@@ -141,7 +181,43 @@ const Sidebar = ({
         </button>
       </div>
 
-      {/* Top Action Pills (AI Itinerary & Currency/Expense) */}
+      {/* 🧭 3-MODE TRIP PERSONA SWITCHER */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr 1fr',
+        background: 'rgba(15, 23, 42, 0.8)',
+        borderRadius: '14px',
+        padding: '4px',
+        border: '1px solid var(--border-color)',
+        gap: '4px'
+      }}>
+        {tripModes.map((mode) => {
+          const isActive = currentMode === mode.id;
+          return (
+            <button
+              key={mode.id}
+              onClick={() => handleModeChange(mode.id)}
+              style={{
+                background: isActive ? 'var(--primary-gradient)' : 'transparent',
+                color: isActive ? 'white' : 'var(--text-secondary)',
+                border: 'none',
+                borderRadius: '10px',
+                padding: '7px 4px',
+                fontSize: '0.74rem',
+                fontWeight: 800,
+                cursor: 'pointer',
+                textAlign: 'center',
+                transition: 'all 0.25s ease',
+                boxShadow: isActive ? '0 4px 12px rgba(99, 102, 241, 0.4)' : 'none'
+              }}
+            >
+              {mode.label}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Top Action Pills (AI Itinerary & Currency/Budget) */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
         <button 
           onClick={onOpenItinerary}
@@ -193,11 +269,11 @@ const Sidebar = ({
       {/* Modern Gradient Weather Widget */}
       <WeatherWidget location={userLocation} address={userAddress} />
 
-      {/* Service Clusters Horizontal Slider */}
+      {/* Dynamic Category Slider based on Selected Mode */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <span style={{ fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--text-secondary)', fontWeight: 800 }}>
-            Explore Services
+            {tripModes.find(m => m.id === currentMode)?.desc}
           </span>
           <span style={{ fontSize: '0.68rem', color: activeCategoryMeta.color, fontWeight: 700 }}>
             {filteredPois.length} spots
@@ -205,7 +281,7 @@ const Sidebar = ({
         </div>
 
         <div className="category-slider">
-          {categories.map((cat) => {
+          {availableCategories.map((cat) => {
             const Icon = cat.icon;
             const isActive = activeCategory === cat.id;
             return (
@@ -218,17 +294,17 @@ const Sidebar = ({
                 }}
                 style={{
                   background: isActive 
-                    ? `linear-gradient(135deg, ${cat.color} 0%, rgba(15, 23, 42, 0.8) 120%)` 
+                    ? `linear-gradient(135deg, ${cat.color} 0%, rgba(15, 23, 42, 0.85) 120%)` 
                     : 'rgba(30, 41, 59, 0.5)',
                   border: isActive ? `1px solid ${cat.color}` : '1px solid rgba(255, 255, 255, 0.08)',
                   borderRadius: '14px',
-                  padding: '7px 14px',
+                  padding: '7px 13px',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '7px',
                   color: isActive ? 'white' : 'var(--text-secondary)',
                   cursor: 'pointer',
-                  fontSize: '0.75rem',
+                  fontSize: '0.74rem',
                   fontWeight: 700,
                   whiteSpace: 'nowrap',
                   boxShadow: isActive ? `0 4px 15px ${cat.color}40` : 'none',
@@ -243,7 +319,7 @@ const Sidebar = ({
         </div>
       </div>
 
-      {/* Dietary Sub-filter for Restaurants */}
+      {/* Dietary Sub-filter for Dining */}
       {activeCategory === 'restaurant' && (
         <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '2px' }}>
           {['All', 'Pure Veg', 'Non-Veg', 'Cafe'].map((diet) => (
@@ -280,7 +356,7 @@ const Sidebar = ({
             background: 'rgba(15, 23, 42, 0.7)',
             border: '1px solid rgba(255, 255, 255, 0.08)',
             borderRadius: '12px',
-            padding: '10px 14px',
+            padding: '9px 14px',
             color: 'white',
             fontSize: '0.82rem',
             outline: 'none',
@@ -289,7 +365,7 @@ const Sidebar = ({
         />
       </div>
 
-      {/* Rich POI Discovery Cards with Curated Photos */}
+      {/* Rich POI Discovery Cards */}
       <div style={{ 
         flex: 1, 
         overflowY: 'auto', 
@@ -382,12 +458,12 @@ const Sidebar = ({
                     justifyContent: 'space-between',
                     alignItems: 'center'
                   }}>
-                    <span>🍲 Must Try: <strong style={{ color: 'white' }}>{poi.signatureDish}</strong></span>
+                    <span>🍲 Highlight: <strong style={{ color: 'white' }}>{poi.signatureDish}</strong></span>
                     <span style={{ fontWeight: 800, color: '#FBBF24' }}>{poi.dishPrice}</span>
                   </div>
                 )}
 
-                {/* Card Quick Action Bar (Audio Guide, 360 View, Turn Directions) */}
+                {/* Card Quick Action Bar */}
                 <div style={{ display: 'flex', gap: '8px', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '8px' }} onClick={(e) => e.stopPropagation()}>
                   <button 
                     onClick={() => onOpenAudio(poi)}
@@ -428,7 +504,7 @@ const Sidebar = ({
                       gap: '4px',
                       cursor: 'pointer'
                     }}
-                    title="View 360° Panoramic Sights"
+                    title="View 360° Sights"
                   >
                     <Globe size={12} color="#06B6D4" /> 360° Sights
                   </button>
