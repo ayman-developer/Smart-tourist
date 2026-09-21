@@ -33,10 +33,8 @@ const ItineraryPlannerModal = ({ isOpen, onClose, pois = [], userLocation, onPlo
   const handleGenerate = () => {
     setIsGenerating(true);
     setTimeout(() => {
-      // Build dynamic schedule based on days and available POIs
       const touristPois = pois.filter(p => p.category === 'tourist');
       const foodPois = pois.filter(p => p.category === 'restaurant');
-      const hotelPois = pois.filter(p => p.category === 'hotel');
 
       const generatedDays = [];
       for (let d = 1; d <= days; d++) {
@@ -58,7 +56,7 @@ const ItineraryPlannerModal = ({ isOpen, onClose, pois = [], userLocation, onPlo
 
       setItinerary(generatedDays);
       setIsGenerating(false);
-    }, 600);
+    }, 500);
   };
 
   const handlePrint = () => {
@@ -83,8 +81,8 @@ const ItineraryPlannerModal = ({ isOpen, onClose, pois = [], userLocation, onPlo
       position: 'fixed',
       inset: 0,
       zIndex: 9999,
-      background: 'rgba(6, 8, 12, 0.85)',
-      backdropFilter: 'blur(16px)',
+      background: 'rgba(8, 12, 20, 0.88)',
+      backdropFilter: 'blur(24px)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -92,44 +90,50 @@ const ItineraryPlannerModal = ({ isOpen, onClose, pois = [], userLocation, onPlo
     }}>
       <div className="glass-panel" style={{
         width: '100%',
-        maxWidth: '750px',
+        maxWidth: '760px',
         maxHeight: '90vh',
         overflowY: 'auto',
         padding: '30px',
         position: 'relative',
         display: 'flex',
         flexDirection: 'column',
-        gap: '20px'
+        gap: '22px',
+        border: '1px solid rgba(255, 255, 255, 0.1)'
       }}>
         
         {/* Modal Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <div style={{ background: 'var(--primary)', padding: '6px', borderRadius: '8px', color: '#06080c' }}>
-              <Calendar size={18} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ 
+              background: 'var(--primary-gradient)', 
+              padding: '8px', 
+              borderRadius: '12px', 
+              color: 'white',
+              boxShadow: '0 4px 15px rgba(99, 102, 241, 0.4)'
+            }}>
+              <Calendar size={20} />
             </div>
             <div>
-              <h2 style={{ fontSize: '1.25rem', fontWeight: 800, margin: 0, color: 'white' }}>
+              <h2 style={{ fontSize: '1.3rem', fontWeight: 900, margin: 0, color: 'white' }}>
                 AI Day-by-Day Itinerary Planner
               </h2>
-              <span style={{ fontSize: '0.72rem', color: 'var(--accent-cyan)', fontWeight: 600 }}>
-                Tailored Travel Schedule & Budget Generator
+              <span style={{ fontSize: '0.74rem', color: '#A78BFA', fontWeight: 700 }}>
+                Smart Travel Schedule & Budget Generator
               </span>
             </div>
           </div>
-          <button onClick={onClose} className="icon-btn" style={{ width: '32px', height: '32px' }}>
+          <button onClick={onClose} className="icon-btn" style={{ width: '34px', height: '34px' }}>
             <X size={16} />
           </button>
         </div>
 
-        {/* Input Controls */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', background: 'rgba(6, 8, 12, 0.5)', padding: '16px', borderRadius: '14px', border: '1px solid var(--border-color)' }}>
+        {/* Sliders Grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', background: 'rgba(15, 23, 42, 0.6)', padding: '18px', borderRadius: '16px', border: '1px solid var(--border-color)' }}>
           
-          {/* Days Slider */}
           <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-              <label style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)' }}>Duration</label>
-              <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--primary)' }}>{days} Days</span>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+              <label style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-secondary)' }}>Duration</label>
+              <span style={{ fontSize: '0.82rem', fontWeight: 900, color: '#8B5CF6' }}>{days} Days</span>
             </div>
             <input 
               type="range" 
@@ -137,15 +141,14 @@ const ItineraryPlannerModal = ({ isOpen, onClose, pois = [], userLocation, onPlo
               max="5" 
               value={days} 
               onChange={(e) => setDays(parseInt(e.target.value))}
-              style={{ width: '100%', accentColor: 'var(--primary)' }}
+              style={{ width: '100%', accentColor: '#8B5CF6' }}
             />
           </div>
 
-          {/* Budget Slider */}
           <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-              <label style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)' }}>Budget</label>
-              <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--primary)' }}>₹{budget.toLocaleString()}</span>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+              <label style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-secondary)' }}>Budget</label>
+              <span style={{ fontSize: '0.82rem', fontWeight: 900, color: '#F59E0B' }}>₹{budget.toLocaleString()}</span>
             </div>
             <input 
               type="range" 
@@ -154,7 +157,7 @@ const ItineraryPlannerModal = ({ isOpen, onClose, pois = [], userLocation, onPlo
               step="1000"
               value={budget} 
               onChange={(e) => setBudget(parseInt(e.target.value))}
-              style={{ width: '100%', accentColor: 'var(--primary)' }}
+              style={{ width: '100%', accentColor: '#F59E0B' }}
             />
           </div>
 
@@ -162,7 +165,7 @@ const ItineraryPlannerModal = ({ isOpen, onClose, pois = [], userLocation, onPlo
 
         {/* Travel Vibe Selector */}
         <div>
-          <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '8px' }}>
+          <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 800, color: 'var(--text-secondary)', marginBottom: '8px' }}>
             Choose Travel Vibe
           </label>
           <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
@@ -171,15 +174,16 @@ const ItineraryPlannerModal = ({ isOpen, onClose, pois = [], userLocation, onPlo
                 key={v}
                 onClick={() => setVibe(v)}
                 style={{
-                  background: vibe === v ? 'var(--primary)' : 'rgba(255, 255, 255, 0.04)',
-                  color: vibe === v ? '#06080c' : 'var(--text-secondary)',
-                  border: vibe === v ? '1px solid var(--primary)' : '1px solid var(--border-color)',
-                  padding: '6px 14px',
+                  background: vibe === v ? 'var(--primary-gradient)' : 'rgba(30, 41, 59, 0.6)',
+                  color: 'white',
+                  border: vibe === v ? 'none' : '1px solid var(--border-color)',
+                  padding: '7px 16px',
                   borderRadius: '20px',
-                  fontSize: '0.75rem',
+                  fontSize: '0.78rem',
                   fontWeight: 700,
                   cursor: 'pointer',
-                  transition: 'all 0.2s'
+                  boxShadow: vibe === v ? '0 4px 15px rgba(99, 102, 241, 0.4)' : 'none',
+                  transition: 'all 0.25s'
                 }}
               >
                 {v}
@@ -188,53 +192,53 @@ const ItineraryPlannerModal = ({ isOpen, onClose, pois = [], userLocation, onPlo
           </div>
         </div>
 
-        {/* Action Button */}
+        {/* Generate Button */}
         <button 
           onClick={handleGenerate}
           disabled={isGenerating}
-          className="btn btn-primary"
-          style={{ width: '100%' }}
+          className="btn-shimmer"
+          style={{ width: '100%', padding: '14px', borderRadius: '14px', fontSize: '0.9rem' }}
         >
-          <Sparkles size={16} /> {isGenerating ? 'Synthesizing Itinerary...' : 'Generate Optimized Itinerary'}
+          <Sparkles size={16} /> {isGenerating ? 'Synthesizing Plan...' : 'Generate Itinerary Plan'}
         </button>
 
-        {/* Output Itinerary Schedule (Printable Area) */}
+        {/* Itinerary Output Schedule */}
         {itinerary && (
-          <div id="printable-itinerary" style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '10px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '8px' }}>
             
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--primary)' }}>
-                ✨ {days}-Day Customized Plan ({vibe})
+              <span style={{ fontSize: '0.9rem', fontWeight: 800, color: 'white' }}>
+                ✨ {days}-Day Schedule ({vibe})
               </span>
               <div style={{ display: 'flex', gap: '8px' }}>
                 <button onClick={handlePlot} className="btn btn-secondary btn-sm">
-                  <Compass size={14} /> Plot Waypoints on Map
+                  <Compass size={14} color="#8B5CF6" /> Plot on Map
                 </button>
                 <button onClick={handlePrint} className="btn btn-primary btn-sm">
-                  <Printer size={14} /> Export PDF Pass
+                  <Printer size={14} /> Export PDF
                 </button>
               </div>
             </div>
 
             {itinerary.map((dayPlan) => (
-              <div key={dayPlan.day} className="glass" style={{ padding: '16px', borderRadius: '14px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                  <h3 style={{ fontSize: '0.95rem', fontWeight: 800, color: 'white', margin: 0 }}>
+              <div key={dayPlan.day} className="glass" style={{ padding: '18px', borderRadius: '16px', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+                  <h3 style={{ fontSize: '1rem', fontWeight: 900, color: 'white', margin: 0 }}>
                     {dayPlan.title}
                   </h3>
-                  <span style={{ fontSize: '0.72rem', color: 'var(--accent-cyan)', fontWeight: 700 }}>
+                  <span style={{ fontSize: '0.75rem', color: '#F59E0B', fontWeight: 800 }}>
                     Est. Daily Budget: ₹{dayPlan.dailyEstimate}
                   </span>
                 </div>
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   {dayPlan.stops.map((stop, idx) => (
-                    <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '0.78rem' }}>
-                      <div style={{ background: 'rgba(0, 229, 255, 0.1)', color: 'var(--primary)', padding: '4px 8px', borderRadius: '6px', fontWeight: 800, whiteSpace: 'nowrap' }}>
+                    <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', fontSize: '0.82rem' }}>
+                      <div style={{ background: 'rgba(99, 102, 241, 0.15)', color: '#A78BFA', padding: '5px 10px', borderRadius: '8px', fontWeight: 800, whiteSpace: 'nowrap' }}>
                         {stop.time}
                       </div>
                       <div style={{ flex: 1 }}>
-                        <strong style={{ color: 'white', display: 'block' }}>{stop.title}</strong>
+                        <strong style={{ color: 'white', display: 'block', fontSize: '0.88rem' }}>{stop.title}</strong>
                         <span style={{ color: 'var(--text-muted)' }}>{stop.type} • {stop.cost}</span>
                       </div>
                     </div>

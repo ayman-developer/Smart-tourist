@@ -6,9 +6,7 @@ import {
   MapPin, 
   X, 
   HeartPulse, 
-  Navigation,
-  Flame,
-  AlertCircle
+  Navigation
 } from 'lucide-react';
 
 const EmergencySosModal = ({ isOpen, onClose, userLocation, userAddress, emergencyPois = [], onNavigateToPoi }) => {
@@ -27,10 +25,10 @@ const EmergencySosModal = ({ isOpen, onClose, userLocation, userAddress, emergen
   };
 
   const emergencyContacts = [
-    { title: 'National Emergency', num: '112', desc: 'All-in-one Emergency Support', color: '#ef4444' },
-    { title: 'Ambulance & Medical', num: '108', desc: '24/7 Emergency Medical Transit', color: '#00e5ff' },
-    { title: 'Police Control Room', num: '100', desc: 'Police Immediate Response', color: '#3b82f6' },
-    { title: 'Women Helpline', num: '1091', desc: 'Tourist & Women Protection', color: '#ec4899' }
+    { title: 'National Helpline', num: '112', desc: 'All-in-one Emergency Rescue', color: '#F43F5E' },
+    { title: 'Ambulance', num: '108', desc: '24/7 Medical Transit & Trauma', color: '#0EA5E9' },
+    { title: 'Police Patrol', num: '100', desc: 'Immediate Response Unit', color: '#8B5CF6' },
+    { title: 'Women Safety', num: '1091', desc: 'Tourist & Women Protection', color: '#EC4899' }
   ];
 
   return (
@@ -38,8 +36,8 @@ const EmergencySosModal = ({ isOpen, onClose, userLocation, userAddress, emergen
       position: 'fixed',
       inset: 0,
       zIndex: 9999,
-      background: 'rgba(6, 8, 12, 0.9)',
-      backdropFilter: 'blur(20px)',
+      background: 'rgba(8, 12, 20, 0.92)',
+      backdropFilter: 'blur(24px)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -47,7 +45,7 @@ const EmergencySosModal = ({ isOpen, onClose, userLocation, userAddress, emergen
     }}>
       <div className="glass-panel" style={{
         width: '100%',
-        maxWidth: '650px',
+        maxWidth: '680px',
         maxHeight: '90vh',
         overflowY: 'auto',
         padding: '30px',
@@ -55,43 +53,43 @@ const EmergencySosModal = ({ isOpen, onClose, userLocation, userAddress, emergen
         display: 'flex',
         flexDirection: 'column',
         gap: '20px',
-        border: '1px solid rgba(239, 68, 68, 0.4)',
-        boxShadow: '0 0 40px rgba(239, 68, 68, 0.25)'
+        border: '1px solid rgba(244, 63, 94, 0.4)',
+        boxShadow: '0 0 50px rgba(244, 63, 94, 0.25)'
       }}>
         
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
             <div style={{ 
-              background: '#ef4444', 
-              padding: '8px', 
-              borderRadius: '10px', 
+              background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)', 
+              padding: '9px', 
+              borderRadius: '12px', 
               color: 'white',
-              boxShadow: '0 0 15px rgba(239, 68, 68, 0.6)'
+              boxShadow: '0 0 20px rgba(244, 63, 94, 0.6)'
             }}>
-              <ShieldAlert size={22} className="animate-pulse" />
+              <ShieldAlert size={24} className="animate-pulse" />
             </div>
             <div>
-              <h2 style={{ fontSize: '1.3rem', fontWeight: 900, margin: 0, color: 'white' }}>
-                Tourist Emergency SOS
+              <h2 style={{ fontSize: '1.35rem', fontWeight: 900, margin: 0, color: 'white' }}>
+                Tourist Emergency Guard & SOS
               </h2>
-              <span style={{ fontSize: '0.75rem', color: '#f87171', fontWeight: 700 }}>
-                1-Tap Safe Haven & Immediate Police / Medical Assistance
+              <span style={{ fontSize: '0.75rem', color: '#FB7185', fontWeight: 700 }}>
+                1-Tap Immediate Police, Trauma & Medical Safe Haven
               </span>
             </div>
           </div>
-          <button onClick={onClose} className="icon-btn" style={{ width: '32px', height: '32px' }}>
+          <button onClick={onClose} className="icon-btn" style={{ width: '34px', height: '34px' }}>
             <X size={16} />
           </button>
         </div>
 
         {/* Current GPS Snapshot */}
-        <div style={{ background: 'rgba(239, 68, 68, 0.08)', border: '1px solid rgba(239, 68, 68, 0.3)', borderRadius: '14px', padding: '14px 18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+        <div style={{ background: 'rgba(244, 63, 94, 0.08)', border: '1px solid rgba(244, 63, 94, 0.3)', borderRadius: '16px', padding: '16px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
           <div style={{ flex: 1, minWidth: '220px' }}>
-            <span style={{ fontSize: '0.68rem', fontWeight: 800, color: '#f87171', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+            <span style={{ fontSize: '0.7rem', fontWeight: 800, color: '#FB7185', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
               Your Detected Coordinates
             </span>
-            <p style={{ fontSize: '0.82rem', color: 'white', fontWeight: 700, margin: '2px 0 0 0' }}>
+            <p style={{ fontSize: '0.88rem', color: 'white', fontWeight: 700, margin: '2px 0 0 0' }}>
               {displayAddress}
             </p>
           </div>
@@ -99,27 +97,27 @@ const EmergencySosModal = ({ isOpen, onClose, userLocation, userAddress, emergen
             onClick={shareLocationWhatsApp}
             style={{
               background: '#25D366',
-              color: '#06080c',
+              color: '#06080C',
               border: 'none',
-              padding: '8px 16px',
-              borderRadius: '10px',
-              fontSize: '0.78rem',
+              padding: '10px 18px',
+              borderRadius: '12px',
+              fontSize: '0.82rem',
               fontWeight: 800,
               display: 'flex',
               alignItems: 'center',
-              gap: '6px',
+              gap: '8px',
               cursor: 'pointer',
-              boxShadow: '0 4px 12px rgba(37, 211, 102, 0.4)'
+              boxShadow: '0 4px 15px rgba(37, 211, 102, 0.4)'
             }}
           >
-            <Share2 size={14} /> WhatsApp Live GPS
+            <Share2 size={16} /> WhatsApp Live GPS
           </button>
         </div>
 
-        {/* 1-Tap Emergency Dials Grid */}
+        {/* 1-Tap Emergency Helplines */}
         <div>
-          <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '10px' }}>
-            Direct Emergency Helplines
+          <span style={{ fontSize: '0.78rem', fontWeight: 800, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '10px' }}>
+            Instant Direct Helplines
           </span>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '10px' }}>
             {emergencyContacts.map((c) => (
@@ -128,8 +126,8 @@ const EmergencySosModal = ({ isOpen, onClose, userLocation, userAddress, emergen
                 href={`tel:${c.num}`}
                 className="glass"
                 style={{
-                  padding: '12px',
-                  borderRadius: '12px',
+                  padding: '14px',
+                  borderRadius: '14px',
                   display: 'flex',
                   flexDirection: 'column',
                   gap: '4px',
@@ -138,43 +136,40 @@ const EmergencySosModal = ({ isOpen, onClose, userLocation, userAddress, emergen
                   border: '1px solid rgba(255, 255, 255, 0.08)'
                 }}
               >
-                <span style={{ fontSize: '1.2rem', fontWeight: 900, color: c.color }}>{c.num}</span>
-                <strong style={{ fontSize: '0.75rem', color: 'white' }}>{c.title}</strong>
-                <span style={{ fontSize: '0.62rem', color: 'var(--text-muted)' }}>{c.desc}</span>
+                <span style={{ fontSize: '1.4rem', fontWeight: 900, color: c.color }}>{c.num}</span>
+                <strong style={{ fontSize: '0.78rem', color: 'white' }}>{c.title}</strong>
+                <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>{c.desc}</span>
               </a>
             ))}
           </div>
         </div>
 
-        {/* Closest Safe Havens (Hospitals & Police Stations) */}
+        {/* Closest Safe Havens */}
         <div>
-          <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '10px' }}>
-            Nearby Medical & Safe Haven Outposts
+          <span style={{ fontSize: '0.78rem', fontWeight: 800, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '10px' }}>
+            Nearby Medical & Police Safe Havens
           </span>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxHeight: '200px', overflowY: 'auto' }}>
-            {emergencyPois.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '20px', color: 'var(--text-muted)', fontSize: '0.78rem' }}>
-                Scanning for nearest emergency centers...
-              </div>
-            ) : (
-              emergencyPois.slice(0, 4).map((poi) => (
-                <div key={poi.id} className="glass" style={{ padding: '12px 16px', borderRadius: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            {emergencyPois.slice(0, 4).map((poi) => (
+              <div key={poi.id} className="glass" style={{ padding: '14px 18px', borderRadius: '14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                  <img src={poi.image} alt={poi.name} style={{ width: '45px', height: '45px', borderRadius: '10px', objectFit: 'cover' }} />
                   <div>
-                    <h4 style={{ margin: 0, fontSize: '0.85rem', fontWeight: 800, color: 'white' }}>{poi.name}</h4>
-                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{poi.address} • {poi.distance} km away</span>
+                    <h4 style={{ margin: 0, fontSize: '0.88rem', fontWeight: 800, color: 'white' }}>{poi.name}</h4>
+                    <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{poi.address} • {poi.distance} km away</span>
                   </div>
-                  <button 
-                    onClick={() => {
-                      if (onNavigateToPoi) onNavigateToPoi(poi);
-                      onClose();
-                    }}
-                    className="btn btn-primary btn-sm"
-                  >
-                    <Navigation size={12} /> Navigate
-                  </button>
                 </div>
-              ))
-            )}
+                <button 
+                  onClick={() => {
+                    if (onNavigateToPoi) onNavigateToPoi(poi);
+                    onClose();
+                  }}
+                  className="btn btn-primary btn-sm"
+                >
+                  <Navigation size={13} /> Navigate
+                </button>
+              </div>
+            ))}
           </div>
         </div>
 

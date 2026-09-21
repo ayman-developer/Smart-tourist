@@ -16,19 +16,21 @@ import {
   Globe,
   Sparkles,
   Eye,
-  Filter
+  Search,
+  ChevronRight,
+  TrendingUp
 } from 'lucide-react';
 import WeatherWidget from './WeatherWidget';
 
 const categories = [
-  { id: 'tourist', label: 'Attractions', icon: MapPin },
-  { id: 'hotel', label: 'Lodgings', icon: Hotel },
-  { id: 'restaurant', label: 'Restaurants', icon: Utensils },
-  { id: 'hospital', label: 'Hospitals', icon: HeartPulse },
-  { id: 'atm', label: 'ATMs & Cash', icon: DollarSign },
-  { id: 'transit', label: 'Transit', icon: Train },
-  { id: 'petrol', label: 'Petrol Bunks', icon: Fuel },
-  { id: 'mechanic', label: 'Mechanics', icon: Wrench }
+  { id: 'tourist', label: 'Attractions', icon: MapPin, color: '#8B5CF6' },
+  { id: 'hotel', label: 'Lodgings', icon: Hotel, color: '#F59E0B' },
+  { id: 'restaurant', label: 'Restaurants', icon: Utensils, color: '#F43F5E' },
+  { id: 'hospital', label: 'Hospitals', icon: HeartPulse, color: '#10B981' },
+  { id: 'petrol', label: 'Fuel & EV', icon: Fuel, color: '#0EA5E9' },
+  { id: 'mechanic', label: 'Mechanics', icon: Wrench, color: '#F97316' },
+  { id: 'atm', label: 'ATMs & Cash', icon: DollarSign, color: '#14B8A6' },
+  { id: 'transit', label: 'Transit', icon: Train, color: '#EC4899' }
 ];
 
 const Sidebar = ({ 
@@ -49,9 +51,8 @@ const Sidebar = ({
   onOpenNavDrawer
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [dietFilter, setDietFilter] = useState('All'); // 'All', 'Pure Veg', 'Non-Veg', 'Cafe'
+  const [dietFilter, setDietFilter] = useState('All');
 
-  // Filter POIs based on search query and dietary filter
   const filteredPois = pois.filter(poi => {
     const matchesSearch = poi.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       (poi.address && poi.address.toLowerCase().includes(searchQuery.toLowerCase()));
@@ -62,97 +63,147 @@ const Sidebar = ({
     return matchesSearch;
   });
 
+  const activeCategoryMeta = categories.find(c => c.id === activeCategory) || categories[0];
+
   return (
     <div className="glass-panel" style={{
-      width: '380px',
+      width: '400px',
       height: 'calc(100vh - 40px)',
       margin: '20px 10px 20px 20px',
-      padding: '20px',
+      padding: '22px',
       display: 'flex',
       flexDirection: 'column',
       gap: '14px',
       position: 'relative',
       overflow: 'hidden',
-      zIndex: 10
+      zIndex: 10,
+      border: '1px solid rgba(255, 255, 255, 0.08)'
     }}>
       
       {/* Brand Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <div style={{ 
-            background: 'var(--primary)',
-            padding: '7px',
-            borderRadius: '10px',
+            background: 'var(--primary-gradient)',
+            padding: '9px',
+            borderRadius: '12px',
             display: 'flex',
-            boxShadow: '0 4px 15px rgba(0, 229, 255, 0.4)'
+            boxShadow: '0 8px 20px rgba(99, 102, 241, 0.45)'
           }}>
-            <Compass size={18} color="#06080c" />
+            <Compass size={20} color="white" />
           </div>
           <div>
             <h1 style={{ 
-              fontSize: '1.15rem', 
+              fontSize: '1.25rem', 
               fontWeight: 900, 
-              letterSpacing: '0.04em', 
               color: 'white',
-              margin: 0
+              margin: 0,
+              letterSpacing: '-0.02em',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
             }}>
-              Tourist<span style={{ color: 'var(--primary)' }}>AI</span>
+              Tourist<span style={{ 
+                background: 'var(--primary-gradient)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent'
+              }}>AI</span>
             </h1>
-            <p style={{ fontSize: '0.65rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', margin: 0, fontWeight: 700 }}>
-              AI Travel Concierge
+            <p style={{ fontSize: '0.68rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', margin: 0, fontWeight: 700 }}>
+              Autonomous Travel Concierge
             </p>
           </div>
         </div>
 
-        {/* 1-Tap SOS Button (Idea 3) */}
+        {/* 1-Tap SOS Button */}
         <button 
           onClick={onOpenSos}
           style={{
-            background: '#ef4444',
+            background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)',
             color: 'white',
             border: 'none',
-            padding: '6px 12px',
+            padding: '7px 14px',
             borderRadius: '20px',
-            fontSize: '0.72rem',
+            fontSize: '0.74rem',
             fontWeight: 800,
             display: 'flex',
             alignItems: 'center',
-            gap: '4px',
+            gap: '5px',
             cursor: 'pointer',
-            boxShadow: '0 0 15px rgba(239, 68, 68, 0.5)'
+            boxShadow: '0 4px 18px rgba(244, 63, 94, 0.55)',
+            transition: 'transform 0.2s ease'
           }}
+          onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+          onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
           title="Emergency Safe Haven & SOS"
         >
-          <ShieldAlert size={13} className="animate-pulse" /> SOS
+          <ShieldAlert size={14} className="animate-pulse" /> SOS Guard
         </button>
       </div>
 
-      {/* Feature Quick-Action Buttons (AI Itinerary & Currency/Expense) */}
+      {/* Top Action Pills (AI Itinerary & Currency/Expense) */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
         <button 
           onClick={onOpenItinerary}
-          className="btn btn-secondary btn-sm"
-          style={{ padding: '7px 10px', fontSize: '0.72rem', gap: '5px' }}
+          style={{
+            background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.1) 100%)',
+            border: '1px solid rgba(99, 102, 241, 0.3)',
+            borderRadius: '12px',
+            padding: '8px 10px',
+            color: 'white',
+            fontSize: '0.74rem',
+            fontWeight: 700,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '6px',
+            cursor: 'pointer',
+            transition: 'all 0.25s ease'
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.borderColor = '#8B5CF6'}
+          onMouseLeave={(e) => e.currentTarget.style.borderColor = 'rgba(99, 102, 241, 0.3)'}
         >
-          <Calendar size={13} color="var(--primary)" /> AI Itinerary
+          <Calendar size={14} color="#8B5CF6" /> AI Itinerary Planner
         </button>
+
         <button 
           onClick={onOpenExpense}
-          className="btn btn-secondary btn-sm"
-          style={{ padding: '7px 10px', fontSize: '0.72rem', gap: '5px' }}
+          style={{
+            background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(251, 191, 36, 0.1) 100%)',
+            border: '1px solid rgba(245, 158, 11, 0.3)',
+            borderRadius: '12px',
+            padding: '8px 10px',
+            color: 'white',
+            fontSize: '0.74rem',
+            fontWeight: 700,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '6px',
+            cursor: 'pointer',
+            transition: 'all 0.25s ease'
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.borderColor = '#F59E0B'}
+          onMouseLeave={(e) => e.currentTarget.style.borderColor = 'rgba(245, 158, 11, 0.3)'}
         >
-          <DollarSign size={13} color="var(--primary)" /> Currency & Exp.
+          <DollarSign size={14} color="#F59E0B" /> Currency & Budget
         </button>
       </div>
 
-      {/* Weather Widget (Enhanced) */}
+      {/* Modern Gradient Weather Widget */}
       <WeatherWidget location={userLocation} address={userAddress} />
 
-      {/* Categories Horizontal Slider */}
+      {/* Service Clusters Horizontal Slider */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-        <span style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--accent-cyan)', fontWeight: 800 }}>
-          Service Clusters
-        </span>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span style={{ fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--text-secondary)', fontWeight: 800 }}>
+            Explore Services
+          </span>
+          <span style={{ fontSize: '0.68rem', color: activeCategoryMeta.color, fontWeight: 700 }}>
+            {filteredPois.length} spots
+          </span>
+        </div>
+
         <div className="category-slider">
           {categories.map((cat) => {
             const Icon = cat.icon;
@@ -166,23 +217,25 @@ const Sidebar = ({
                   onPoiSelect(null);
                 }}
                 style={{
-                  background: isActive ? 'var(--primary)' : 'rgba(255, 255, 255, 0.04)',
-                  border: isActive ? '1px solid var(--primary)' : '1px solid rgba(255, 255, 255, 0.08)',
-                  borderRadius: '20px',
-                  padding: '6px 14px',
+                  background: isActive 
+                    ? `linear-gradient(135deg, ${cat.color} 0%, rgba(15, 23, 42, 0.8) 120%)` 
+                    : 'rgba(30, 41, 59, 0.5)',
+                  border: isActive ? `1px solid ${cat.color}` : '1px solid rgba(255, 255, 255, 0.08)',
+                  borderRadius: '14px',
+                  padding: '7px 14px',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '6px',
-                  color: isActive ? '#06080c' : 'rgba(255, 255, 255, 0.8)',
+                  gap: '7px',
+                  color: isActive ? 'white' : 'var(--text-secondary)',
                   cursor: 'pointer',
-                  fontSize: '0.72rem',
+                  fontSize: '0.75rem',
                   fontWeight: 700,
                   whiteSpace: 'nowrap',
-                  boxShadow: isActive ? '0 0 12px rgba(0, 229, 255, 0.35)' : 'none',
-                  transition: 'all 0.25s ease'
+                  boxShadow: isActive ? `0 4px 15px ${cat.color}40` : 'none',
+                  transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
                 }}
               >
-                <Icon size={12} />
+                <Icon size={14} color={isActive ? 'white' : cat.color} />
                 {cat.label}
               </button>
             );
@@ -190,20 +243,20 @@ const Sidebar = ({
         </div>
       </div>
 
-      {/* Dietary Sub-filter for Restaurants (Idea 6) */}
+      {/* Dietary Sub-filter for Restaurants */}
       {activeCategory === 'restaurant' && (
-        <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '4px' }}>
+        <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '2px' }}>
           {['All', 'Pure Veg', 'Non-Veg', 'Cafe'].map((diet) => (
             <button
               key={diet}
               onClick={() => setDietFilter(diet)}
               style={{
-                background: dietFilter === diet ? 'rgba(0, 229, 255, 0.15)' : 'rgba(255,255,255,0.03)',
-                color: dietFilter === diet ? 'var(--primary)' : 'var(--text-muted)',
-                border: dietFilter === diet ? '1px solid var(--primary)' : '1px solid var(--border-color)',
+                background: dietFilter === diet ? 'linear-gradient(135deg, #F43F5E 0%, #FB923C 100%)' : 'rgba(255,255,255,0.04)',
+                color: dietFilter === diet ? 'white' : 'var(--text-muted)',
+                border: dietFilter === diet ? 'none' : '1px solid var(--border-color)',
                 borderRadius: '12px',
-                padding: '3px 8px',
-                fontSize: '0.68rem',
+                padding: '4px 10px',
+                fontSize: '0.7rem',
                 fontWeight: 700,
                 cursor: 'pointer',
                 whiteSpace: 'nowrap'
@@ -219,35 +272,35 @@ const Sidebar = ({
       <div style={{ position: 'relative' }}>
         <input 
           type="text"
-          placeholder={`Search ${categories.find(c => c.id === activeCategory)?.label.toLowerCase()}...`}
+          placeholder={`Search ${activeCategoryMeta.label.toLowerCase()}...`}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           style={{
             width: '100%',
-            background: 'rgba(6, 8, 12, 0.6)',
-            border: '1px solid var(--glass-border)',
-            borderRadius: '10px',
-            padding: '9px 14px',
+            background: 'rgba(15, 23, 42, 0.7)',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
+            borderRadius: '12px',
+            padding: '10px 14px',
             color: 'white',
-            fontSize: '0.78rem',
+            fontSize: '0.82rem',
             outline: 'none',
             transition: 'all 0.3s'
           }}
         />
       </div>
 
-      {/* Places List (With Crowd Badges, Food Specials, Audio Stories & 360 preview) */}
+      {/* Rich POI Discovery Cards with Curated Photos */}
       <div style={{ 
         flex: 1, 
         overflowY: 'auto', 
         display: 'flex', 
         flexDirection: 'column', 
-        gap: '10px', 
+        gap: '12px', 
         paddingRight: '2px' 
       }}>
         {filteredPois.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '30px 10px', color: 'var(--text-muted)', fontSize: '0.78rem' }}>
-            No spots found in this area.
+          <div style={{ textAlign: 'center', padding: '30px 10px', color: 'var(--text-muted)', fontSize: '0.8rem' }}>
+            No spots found in this radius.
           </div>
         ) : (
           filteredPois.map(poi => {
@@ -260,52 +313,54 @@ const Sidebar = ({
                 onMouseEnter={() => onPoiHover(poi)}
                 onMouseLeave={() => onPoiHover(null)}
                 style={{
-                  padding: '10px 12px',
+                  padding: '12px',
                   cursor: 'pointer',
-                  borderLeft: isActive ? '3px solid var(--primary)' : '1px solid var(--glass-border)',
-                  background: isActive ? 'rgba(0, 229, 255, 0.08)' : 'rgba(13, 17, 26, 0.65)',
+                  border: isActive ? `1px solid ${activeCategoryMeta.color}` : '1px solid rgba(255, 255, 255, 0.06)',
+                  background: isActive ? 'rgba(30, 41, 59, 0.85)' : 'rgba(15, 23, 42, 0.7)',
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: '8px',
-                  borderRadius: '12px',
-                  transition: 'all 0.25s ease'
+                  gap: '10px',
+                  borderRadius: '16px',
+                  boxShadow: isActive ? `0 8px 25px ${activeCategoryMeta.color}30` : '0 4px 15px rgba(0,0,0,0.2)'
                 }}
               >
-                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
                   <img 
                     src={poi.image} 
                     alt={poi.name} 
                     style={{ 
-                      width: '42px', 
-                      height: '42px', 
-                      borderRadius: '8px', 
+                      width: '64px', 
+                      height: '64px', 
+                      borderRadius: '12px', 
                       objectFit: 'cover', 
-                      flexShrink: 0 
+                      flexShrink: 0,
+                      border: '1px solid rgba(255, 255, 255, 0.1)'
                     }} 
                   />
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                      <h4 style={{ 
-                        fontSize: '0.8rem', 
-                        fontWeight: 800, 
-                        margin: '0 0 2px 0', 
-                        textOverflow: 'ellipsis', 
-                        overflow: 'hidden', 
-                        whiteSpace: 'nowrap',
-                        color: isActive ? 'var(--primary)' : '#f8fafc'
-                      }}>
-                        {poi.name}
-                      </h4>
-                    </div>
+                    <h4 style={{ 
+                      fontSize: '0.88rem', 
+                      fontWeight: 800, 
+                      margin: '0 0 3px 0', 
+                      textOverflow: 'ellipsis', 
+                      overflow: 'hidden', 
+                      whiteSpace: 'nowrap',
+                      color: isActive ? 'white' : '#F8FAFC'
+                    }}>
+                      {poi.name}
+                    </h4>
 
-                    <div style={{ display: 'flex', gap: '6px', alignItems: 'center', fontSize: '0.68rem', color: 'var(--text-muted)', fontWeight: 600 }}>
-                      <span style={{ color: 'var(--primary)' }}>★ {poi.rating}</span>
+                    <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', display: 'block', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', marginBottom: '4px' }}>
+                      {poi.address}
+                    </span>
+
+                    <div style={{ display: 'flex', gap: '6px', alignItems: 'center', fontSize: '0.72rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
+                      <span style={{ color: '#F59E0B', fontWeight: 800 }}>★ {poi.rating}</span>
                       <span>•</span>
                       <span>{poi.distance} km</span>
                       <span>•</span>
-                      {/* Live Crowd Density Indicator (Idea 8) */}
                       <span style={{ 
-                        color: (poi.crowdStatus || '').includes('Low') ? '#4ade80' : ((poi.crowdStatus || '').includes('Mod') ? '#facc15' : '#f87171'),
+                        color: (poi.crowdStatus || '').includes('Low') ? '#34D399' : ((poi.crowdStatus || '').includes('Mod') ? '#FBBF24' : '#FB7185'),
                         fontWeight: 700 
                       }}>
                         {poi.crowdStatus || 'Moderate Crowd'}
@@ -314,41 +369,89 @@ const Sidebar = ({
                   </div>
                 </div>
 
-                {/* Signature Dish Badge for Restaurants (Idea 6) */}
+                {/* Signature Dish Badge */}
                 {poi.signatureDish && (
-                  <div style={{ background: 'rgba(0, 229, 255, 0.05)', border: '1px solid rgba(0, 229, 255, 0.15)', borderRadius: '6px', padding: '3px 8px', fontSize: '0.65rem', color: 'var(--accent-cyan)', display: 'flex', justifyContent: 'space-between' }}>
-                    <span>🍲 Must Try: <strong>{poi.signatureDish}</strong></span>
-                    <span style={{ fontWeight: 800 }}>{poi.dishPrice}</span>
+                  <div style={{ 
+                    background: 'linear-gradient(135deg, rgba(244, 63, 94, 0.1) 0%, rgba(251, 146, 60, 0.08) 100%)', 
+                    border: '1px solid rgba(244, 63, 94, 0.25)', 
+                    borderRadius: '8px', 
+                    padding: '5px 10px', 
+                    fontSize: '0.72rem', 
+                    color: '#FDA4AF', 
+                    display: 'flex', 
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                  }}>
+                    <span>🍲 Must Try: <strong style={{ color: 'white' }}>{poi.signatureDish}</strong></span>
+                    <span style={{ fontWeight: 800, color: '#FBBF24' }}>{poi.dishPrice}</span>
                   </div>
                 )}
 
                 {/* Card Quick Action Bar (Audio Guide, 360 View, Turn Directions) */}
-                <div style={{ display: 'flex', gap: '6px', borderTop: '1px solid rgba(255,255,255,0.04)', paddingTop: '6px' }} onClick={(e) => e.stopPropagation()}>
+                <div style={{ display: 'flex', gap: '8px', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '8px' }} onClick={(e) => e.stopPropagation()}>
                   <button 
                     onClick={() => onOpenAudio(poi)}
-                    className="btn btn-secondary btn-sm"
-                    style={{ flex: 1, padding: '4px 6px', fontSize: '0.65rem', gap: '4px' }}
+                    style={{
+                      flex: 1,
+                      background: 'rgba(139, 92, 246, 0.12)',
+                      border: '1px solid rgba(139, 92, 246, 0.3)',
+                      color: '#C4B5FD',
+                      padding: '5px 8px',
+                      borderRadius: '8px',
+                      fontSize: '0.7rem',
+                      fontWeight: 700,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '4px',
+                      cursor: 'pointer'
+                    }}
                     title="Play Multilingual Audio Story"
                   >
-                    <Volume2 size={11} color="var(--primary)" /> Audio Guide
+                    <Volume2 size={12} color="#8B5CF6" /> Audio Guide
                   </button>
 
                   <button 
                     onClick={() => onOpenVirtual(poi)}
-                    className="btn btn-secondary btn-sm"
-                    style={{ flex: 1, padding: '4px 6px', fontSize: '0.65rem', gap: '4px' }}
-                    title="View 360° Street View & Photos"
+                    style={{
+                      flex: 1,
+                      background: 'rgba(6, 182, 212, 0.12)',
+                      border: '1px solid rgba(6, 182, 212, 0.3)',
+                      color: '#67E8F9',
+                      padding: '5px 8px',
+                      borderRadius: '8px',
+                      fontSize: '0.7rem',
+                      fontWeight: 700,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '4px',
+                      cursor: 'pointer'
+                    }}
+                    title="View 360° Panoramic Sights"
                   >
-                    <Globe size={11} color="var(--primary)" /> 360° View
+                    <Globe size={12} color="#06B6D4" /> 360° Sights
                   </button>
 
                   <button 
                     onClick={() => onOpenNavDrawer(poi)}
-                    className="btn btn-primary btn-sm"
-                    style={{ padding: '4px 8px', fontSize: '0.65rem' }}
+                    style={{
+                      background: 'var(--primary-gradient)',
+                      border: 'none',
+                      color: 'white',
+                      padding: '5px 12px',
+                      borderRadius: '8px',
+                      fontSize: '0.7rem',
+                      fontWeight: 800,
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                      cursor: 'pointer',
+                      boxShadow: '0 2px 10px rgba(99, 102, 241, 0.4)'
+                    }}
                     title="Turn-by-turn Navigation"
                   >
-                    <Navigation size={11} />
+                    <Navigation size={12} /> Go
                   </button>
                 </div>
 
@@ -358,36 +461,30 @@ const Sidebar = ({
         )}
       </div>
 
-      {/* Optimize Route action block */}
+      {/* Optimize Route AI Bar */}
       <div style={{ 
-        borderTop: '1px solid rgba(255,255,255,0.06)', 
-        paddingTop: '10px' 
+        borderTop: '1px solid rgba(255,255,255,0.08)', 
+        paddingTop: '12px' 
       }}>
         <button 
           onClick={onOptimizeRoute}
           disabled={pois.length === 0}
+          className="btn-shimmer"
           style={{
-            background: 'var(--primary)',
-            color: '#06080c',
-            border: 'none',
-            padding: '11px',
-            borderRadius: '12px',
-            fontWeight: 800,
-            fontSize: '0.8rem',
+            padding: '13px',
+            borderRadius: '14px',
+            fontSize: '0.85rem',
             letterSpacing: '0.04em',
             textTransform: 'uppercase',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             gap: '8px',
-            cursor: 'pointer',
             width: '100%',
-            boxShadow: '0 5px 20px rgba(0, 229, 255, 0.4)',
-            transition: 'all 0.25s',
             opacity: pois.length === 0 ? 0.5 : 1
           }}
         >
-          <Navigation size={14} />
+          <Navigation size={16} />
           Optimize Route AI
         </button>
       </div>

@@ -2,26 +2,34 @@ import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap, Polyline } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { Volume2, Globe, Navigation, Star } from 'lucide-react';
+import { Volume2, Globe, Navigation, Star, MapPin } from 'lucide-react';
 
-// Fix default marker icon shadow URL
-import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+const categoryColorMap = {
+  tourist: '#8B5CF6',
+  hotel: '#F59E0B',
+  restaurant: '#F43F5E',
+  hospital: '#10B981',
+  petrol: '#0EA5E9',
+  mechanic: '#F97316',
+  atm: '#14B8A6',
+  transit: '#EC4899'
+};
 
-// Generate custom SVG markers in Portfolio Cyan Palette
+// Generate multi-colored custom SVG markers
 const getMarkerIcon = (category, isSelected = false, isHovered = false) => {
-  const color = '#00e5ff'; // Electric Neon Cyan
-  const size = isSelected ? 38 : (isHovered ? 34 : 28);
-  const strokeColor = isSelected ? '#ffffff' : '#06080c';
+  const color = categoryColorMap[category] || '#6366F1';
+  const size = isSelected ? 40 : (isHovered ? 36 : 30);
+  const strokeColor = isSelected ? '#FFFFFF' : '#080C14';
   const strokeWidth = isSelected ? 2.5 : 1.5;
   const shadow = isSelected 
-    ? 'filter: drop-shadow(0 0 12px rgba(0, 229, 255, 0.95));' 
-    : (isHovered ? 'filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.65));' : '');
+    ? `filter: drop-shadow(0 0 16px ${color});` 
+    : (isHovered ? `filter: drop-shadow(0 0 10px ${color});` : `filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));`);
 
   return new L.DivIcon({
     html: `<div style="${shadow} display: flex; align-items: center; justify-content: center;">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="${color}" width="${size}" height="${size}" stroke="${strokeColor}" stroke-width="${strokeWidth}" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="${color}" width="${size}" height="${size}" stroke="${strokeColor}" stroke-width="${strokeWidth}" stroke-linecap="round" stroke-linejoin="round">
         <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
-        <circle cx="12" cy="10" r="3.5" fill="#06080c"/>
+        <circle cx="12" cy="10" r="3.5" fill="#080C14"/>
       </svg>
     </div>`,
     className: 'custom-map-pin',
@@ -31,41 +39,33 @@ const getMarkerIcon = (category, isSelected = false, isHovered = false) => {
   });
 };
 
-// Custom User Pin Icon with Radar Pulse
+// User Location Pin with Multi-Ring Radar Halo
 const getUserIcon = () => {
   return new L.DivIcon({
-    html: `<div style="filter: drop-shadow(0 0 12px rgba(0, 229, 255, 0.8)); display: flex; align-items: center; justify-content: center;">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#00e5ff" width="34" height="34" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="10" fill="rgba(0, 229, 255, 0.25)"/>
-        <circle cx="12" cy="12" r="5" fill="#00e5ff" stroke="white" stroke-width="2"/>
+    html: `<div style="filter: drop-shadow(0 0 14px rgba(99, 102, 241, 0.9)); display: flex; align-items: center; justify-content: center;">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#6366F1" width="36" height="36" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10" fill="rgba(99, 102, 241, 0.35)"/>
+        <circle cx="12" cy="12" r="5" fill="#8B5CF6" stroke="white" stroke-width="2"/>
       </svg>
     </div>`,
     className: 'user-map-pin',
-    iconSize: [34, 34],
-    iconAnchor: [17, 17]
+    iconSize: [36, 36],
+    iconAnchor: [18, 18]
   });
 };
 
-// Map Controller for auto-panning and zooming when items are selected
 function MapController({ selectedPoi }) {
   const map = useMap();
-  
   useEffect(() => {
     if (selectedPoi) {
-      map.flyTo([selectedPoi.lat, selectedPoi.lng], 15, {
-        animate: true,
-        duration: 1.2
-      });
+      map.flyTo([selectedPoi.lat, selectedPoi.lng], 15, { animate: true, duration: 1.2 });
     }
   }, [selectedPoi, map]);
-
   return null;
 }
 
-// Map Auto-Fit bounds controller
 function BoundsController({ pointsOfInterest, userLocation, routeGeometry }) {
   const map = useMap();
-
   useEffect(() => {
     if (routeGeometry && routeGeometry.length > 0) {
       const bounds = L.latLngBounds(routeGeometry);
@@ -78,7 +78,6 @@ function BoundsController({ pointsOfInterest, userLocation, routeGeometry }) {
       map.fitBounds(bounds, { padding: [50, 50], maxZoom: 15 });
     }
   }, [pointsOfInterest, userLocation, routeGeometry, map]);
-
   return null;
 }
 
@@ -106,11 +105,11 @@ const MapComponent = ({
     <div style={{ 
       flex: 1, 
       position: 'relative', 
-      borderRadius: '20px', 
+      borderRadius: '24px', 
       overflow: 'hidden', 
       margin: '20px 20px 20px 10px', 
-      boxShadow: '0 20px 50px rgba(0,0,0,0.6)', 
-      border: '1px solid var(--glass-border)' 
+      boxShadow: '0 25px 60px rgba(0,0,0,0.7)', 
+      border: '1px solid rgba(255, 255, 255, 0.08)' 
     }}>
       <MapContainer 
         center={mapCenter} 
@@ -119,13 +118,12 @@ const MapComponent = ({
         style={{ height: '100%', width: '100%' }}
         attributionControl={false}
       >
-        {/* Sleek Dark Mode Vector Tiles */}
         <TileLayer
           attribution=""
           url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
         />
         
-        {/* User Location Pin */}
+        {/* User Location */}
         {userLocation && (
           <Marker position={[userLocation.lat, userLocation.lng]} icon={getUserIcon()}>
             <Popup>
@@ -136,80 +134,81 @@ const MapComponent = ({
           </Marker>
         )}
 
-        {/* Real OSRM Road Geometry Route Line (Idea 4) */}
+        {/* Real OSRM Road Geometry Route Line */}
         {routeGeometry && routeGeometry.length > 0 ? (
           <Polyline 
             positions={routeGeometry} 
-            color="#00e5ff" 
-            weight={5}
-            opacity={0.9}
+            color="#8B5CF6" 
+            weight={5.5}
+            opacity={0.95}
           />
         ) : (
-          /* Connecting dashed line */
           pointsOfInterest.length > 0 && userLocation && (
             <Polyline 
               positions={[
                 [userLocation.lat, userLocation.lng],
                 ...pointsOfInterest.map(p => [p.lat, p.lng])
               ]} 
-              color="#00e5ff" 
+              color="#6366F1" 
               dashArray="8, 12"
               weight={3}
-              opacity={0.65}
+              opacity={0.7}
             />
           )
         )}
 
-        {/* Points of Interest pins with enhanced popups */}
+        {/* POI Markers with Rich Image Popups */}
         {pointsOfInterest.map((poi) => {
           const isSelected = selectedPoi?.id === poi.id;
           const isHovered = hoveredPoi?.id === poi.id;
+          const categoryColor = categoryColorMap[poi.category || activeCategory] || '#8B5CF6';
+
           return (
             <Marker 
               key={poi.id} 
               position={[poi.lat, poi.lng]}
-              icon={getMarkerIcon(activeCategory, isSelected, isHovered)}
+              icon={getMarkerIcon(poi.category || activeCategory, isSelected, isHovered)}
               eventHandlers={{
-                click: () => {
-                  setSelectedPoi(poi);
-                },
+                click: () => setSelectedPoi(poi),
               }}
             >
               <Popup>
-                <div style={{ width: '230px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div style={{ width: '250px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
                   <img 
                     src={poi.image} 
                     alt={poi.name} 
-                    style={{ width: '100%', height: '95px', objectFit: 'cover', borderRadius: '10px' }} 
+                    style={{ width: '100%', height: '110px', objectFit: 'cover', borderRadius: '12px' }} 
                   />
                   <div>
-                    <h3 style={{ margin: '0 0 3px 0', fontSize: '0.9rem', fontWeight: 800, color: 'white' }}>
+                    <h3 style={{ margin: '0 0 3px 0', fontSize: '0.95rem', fontWeight: 900, color: 'white' }}>
                       {poi.name}
                     </h3>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: 'var(--text-muted)' }}>
-                      <span style={{ color: 'var(--primary)', fontWeight: 700 }}>★ {poi.rating}</span>
+                    <p style={{ margin: '0 0 6px 0', fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+                      {poi.address}
+                    </p>
+
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.74rem', color: 'var(--text-secondary)' }}>
+                      <span style={{ color: '#F59E0B', fontWeight: 800 }}>★ {poi.rating}</span>
                       <span>{poi.distance} km away</span>
                     </div>
 
-                    {/* Crowd density indicator */}
-                    <div style={{ fontSize: '0.68rem', marginTop: '4px', color: (poi.crowdStatus || '').includes('Low') ? '#4ade80' : '#facc15', fontWeight: 700 }}>
+                    <div style={{ fontSize: '0.7rem', marginTop: '4px', color: (poi.crowdStatus || '').includes('Low') ? '#34D399' : '#FBBF24', fontWeight: 700 }}>
                       • {poi.crowdStatus || 'Moderate Crowd'}
                     </div>
 
-                    {/* Signature dish preview */}
                     {poi.signatureDish && (
-                      <div style={{ fontSize: '0.68rem', color: 'var(--accent-cyan)', marginTop: '2px' }}>
+                      <div style={{ fontSize: '0.7rem', color: '#FDA4AF', marginTop: '3px' }}>
                         🍲 {poi.signatureDish}
                       </div>
                     )}
                   </div>
 
                   {/* Popup Actions Bar */}
-                  <div style={{ display: 'flex', gap: '4px', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '6px' }}>
+                  <div style={{ display: 'flex', gap: '6px', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '8px' }}>
                     {onOpenAudio && (
                       <button 
                         onClick={() => onOpenAudio(poi)}
-                        style={{ flex: 1, background: 'rgba(0,229,255,0.1)', color: 'var(--primary)', border: '1px solid rgba(0,229,255,0.2)', padding: '4px', borderRadius: '6px', fontSize: '0.65rem', fontWeight: 700, cursor: 'pointer' }}
+                        style={{ flex: 1, background: 'rgba(139, 92, 246, 0.15)', color: '#C4B5FD', border: '1px solid rgba(139, 92, 246, 0.3)', padding: '5px', borderRadius: '8px', fontSize: '0.7rem', fontWeight: 700, cursor: 'pointer' }}
                       >
                         Audio
                       </button>
@@ -217,15 +216,15 @@ const MapComponent = ({
                     {onOpenVirtual && (
                       <button 
                         onClick={() => onOpenVirtual(poi)}
-                        style={{ flex: 1, background: 'rgba(255,255,255,0.05)', color: 'white', border: '1px solid rgba(255,255,255,0.1)', padding: '4px', borderRadius: '6px', fontSize: '0.65rem', fontWeight: 700, cursor: 'pointer' }}
+                        style={{ flex: 1, background: 'rgba(6, 182, 212, 0.15)', color: '#67E8F9', border: '1px solid rgba(6, 182, 212, 0.3)', padding: '5px', borderRadius: '8px', fontSize: '0.7rem', fontWeight: 700, cursor: 'pointer' }}
                       >
-                        360°
+                        360° Sights
                       </button>
                     )}
                     {onOpenNavDrawer && (
                       <button 
                         onClick={() => onOpenNavDrawer(poi)}
-                        style={{ flex: 1, background: 'var(--primary)', color: '#06080c', border: 'none', padding: '4px', borderRadius: '6px', fontSize: '0.65rem', fontWeight: 800, cursor: 'pointer' }}
+                        style={{ flex: 1, background: 'var(--primary-gradient)', color: 'white', border: 'none', padding: '5px', borderRadius: '8px', fontSize: '0.7rem', fontWeight: 800, cursor: 'pointer' }}
                       >
                         Navigate
                       </button>

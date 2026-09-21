@@ -10,7 +10,7 @@ import {
   ChevronUp, 
   Sparkles, 
   Compass,
-  AlertTriangle 
+  SunMedium
 } from 'lucide-react';
 import { getCurrentWeather } from '../utils/api';
 
@@ -37,9 +37,9 @@ const WeatherWidget = ({ location, address }) => {
 
   const getIcon = (condition) => {
     const cond = (condition || '').toLowerCase();
-    if (cond.includes('rain') || cond.includes('drizzle')) return <CloudRain size={22} color="#00e5ff" />;
-    if (cond.includes('cloud')) return <Cloud size={22} color="#94a3b8" />;
-    return <Sun size={22} color="#f59e0b" />;
+    if (cond.includes('rain') || cond.includes('drizzle')) return <CloudRain size={26} color="#38BDF8" />;
+    if (cond.includes('cloud')) return <Cloud size={26} color="#CBD5E1" />;
+    return <Sun size={26} color="#F59E0B" className="animate-spin-slow" />;
   };
 
   if (loading || !weather) {
@@ -55,23 +55,34 @@ const WeatherWidget = ({ location, address }) => {
     : (address || 'Detecting address...');
 
   return (
-    <div className="glass-card" style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+    <div style={{
+      background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.8) 100%)',
+      border: '1px solid rgba(255, 255, 255, 0.08)',
+      borderRadius: '18px',
+      padding: '16px',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '12px',
+      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)'
+    }}>
       
       {/* Primary Weather Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div style={{ flex: 1, paddingRight: '8px' }}>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-            <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: 'white', margin: 0 }}>{weather.temp}°C</h3>
+            <h3 style={{ fontSize: '1.6rem', fontWeight: 900, color: 'white', margin: 0, letterSpacing: '-0.02em' }}>
+              {weather.temp}°C
+            </h3>
             <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600 }}>
               Feels like {weather.feelsLike}°C
             </span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '4px', marginTop: '4px' }}>
-            <MapPin size={12} color="var(--primary)" style={{ marginTop: '2px', flexShrink: 0 }} />
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '5px', marginTop: '4px' }}>
+            <MapPin size={13} color="#8B5CF6" style={{ marginTop: '2px', flexShrink: 0 }} />
             <p style={{ 
-              fontSize: '0.68rem', 
-              color: 'var(--text-muted)', 
-              lineHeight: '1.2', 
+              fontSize: '0.72rem', 
+              color: 'var(--text-secondary)', 
+              lineHeight: '1.3', 
               fontWeight: 600,
               maxHeight: '2.4em',
               overflow: 'hidden',
@@ -85,54 +96,54 @@ const WeatherWidget = ({ location, address }) => {
             </p>
           </div>
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3px' }}>
           {getIcon(weather.condition)}
-          <span style={{ fontSize: '0.65rem', color: 'var(--text-secondary)', fontWeight: 700 }}>{weather.condition}</span>
+          <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', fontWeight: 700 }}>{weather.condition}</span>
         </div>
       </div>
 
-      {/* Tourism Advisory Box (Idea 5) */}
+      {/* Tourism Advisory Box */}
       <div style={{ 
-        background: 'rgba(0, 229, 255, 0.06)', 
-        border: '1px solid rgba(0, 229, 255, 0.2)', 
-        borderRadius: '10px', 
-        padding: '8px 10px', 
+        background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(139, 92, 246, 0.08) 100%)', 
+        border: '1px solid rgba(99, 102, 241, 0.25)', 
+        borderRadius: '12px', 
+        padding: '9px 12px', 
         display: 'flex', 
         alignItems: 'flex-start', 
-        gap: '6px' 
+        gap: '8px' 
       }}>
-        <Sparkles size={14} color="var(--primary)" style={{ marginTop: '2px', flexShrink: 0 }} />
-        <p style={{ fontSize: '0.68rem', color: 'var(--text-primary)', margin: 0, lineHeight: 1.4, fontWeight: 500 }}>
+        <Sparkles size={15} color="#A78BFA" style={{ marginTop: '2px', flexShrink: 0 }} />
+        <p style={{ fontSize: '0.72rem', color: 'white', margin: 0, lineHeight: 1.45, fontWeight: 500 }}>
           {weather.advisory}
         </p>
       </div>
 
       {/* Atmospheric Micro Stats */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '6px', paddingTop: '4px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.68rem', color: 'var(--text-muted)' }}>
-          <Wind size={11} />
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px', paddingTop: '4px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+          <Wind size={12} color="#38BDF8" />
           <span>{weather.wind} km/h</span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.68rem', color: 'var(--text-muted)' }}>
-          <Thermometer size={11} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+          <Thermometer size={12} color="#F43F5E" />
           <span>{weather.humidity}% Hum.</span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.68rem', color: 'var(--text-muted)' }}>
-          <Compass size={11} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+          <Compass size={12} color="#F59E0B" />
           <span>UV {weather.uvIndex}</span>
         </div>
       </div>
 
-      {/* 3-Day Forecast Toggle */}
+      {/* 3-Day Forecast Expander */}
       {weather.forecast && weather.forecast.length > 0 && (
-        <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '6px' }}>
+        <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '6px' }}>
           <button 
             onClick={() => setShowForecast(!showForecast)}
             style={{ 
               background: 'none', 
               border: 'none', 
-              color: 'var(--primary)', 
-              fontSize: '0.68rem', 
+              color: '#A78BFA', 
+              fontSize: '0.72rem', 
               fontWeight: 700, 
               display: 'flex', 
               alignItems: 'center', 
@@ -143,21 +154,21 @@ const WeatherWidget = ({ location, address }) => {
             }}
           >
             <span>3-Day Tourism Outlook</span>
-            {showForecast ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+            {showForecast ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
           </button>
 
           {showForecast && (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px', marginTop: '8px' }}>
               {weather.forecast.map((day, i) => (
                 <div key={i} style={{ 
-                  background: 'rgba(6, 8, 12, 0.6)', 
-                  border: '1px solid rgba(255,255,255,0.06)', 
-                  borderRadius: '8px', 
-                  padding: '6px 4px', 
+                  background: 'rgba(15, 23, 42, 0.7)', 
+                  border: '1px solid rgba(255,255,255,0.08)', 
+                  borderRadius: '10px', 
+                  padding: '7px 4px', 
                   textAlign: 'center' 
                 }}>
-                  <span style={{ fontSize: '0.65rem', fontWeight: 800, color: 'white', display: 'block' }}>{day.date}</span>
-                  <span style={{ fontSize: '0.62rem', color: 'var(--primary)', fontWeight: 700 }}>{day.maxTemp}° / {day.minTemp}°</span>
+                  <span style={{ fontSize: '0.68rem', fontWeight: 800, color: 'white', display: 'block' }}>{day.date}</span>
+                  <span style={{ fontSize: '0.65rem', color: '#8B5CF6', fontWeight: 800 }}>{day.maxTemp}° / {day.minTemp}°</span>
                 </div>
               ))}
             </div>
