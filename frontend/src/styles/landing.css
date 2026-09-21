@@ -334,6 +334,49 @@
 }
 
 /* Container */
+/* Slide-in from Left Keyframe Animations */
+@keyframes slideInFromLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-60px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.anim-slide-left-1 {
+  animation: slideInFromLeft 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.anim-slide-left-2 {
+  animation: slideInFromLeft 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.12s forwards;
+  opacity: 0;
+}
+
+.anim-slide-left-3 {
+  animation: slideInFromLeft 1s cubic-bezier(0.16, 1, 0.3, 1) 0.24s forwards;
+  opacity: 0;
+}
+
+.anim-slide-left-4 {
+  animation: slideInFromLeft 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.36s forwards;
+  opacity: 0;
+}
+
+.anim-slide-left-5 {
+  animation: slideInFromLeft 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.48s forwards;
+  opacity: 0;
+}
+
+.hero-container {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 clamp(1.5rem, 4vw, 4rem);
+}
+
 .container {
   width: 100%;
   max-width: 1240px;

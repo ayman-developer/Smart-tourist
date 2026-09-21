@@ -246,42 +246,48 @@ const LandingPage = () => {
 
       {/* SECTION 1: HERO / ABOUT */}
       <section id="about" className="section" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', paddingTop: '130px' }}>
-        <div className="container">
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '50px', alignItems: 'center' }}>
+        <div className="hero-container">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '50px', alignItems: 'center' }}>
             
-            {/* Left Content */}
-            <div>
-              <span className="section-subtitle">Autonomous Travel Intelligence</span>
-              <h1 className="hero-title">
-                Smart Tourist<br />Assistant
-              </h1>
+            {/* Left Content with Slide-In From Left Animations */}
+            <div style={{ textAlign: 'left' }}>
+              <div className="anim-slide-left-1">
+                <span className="section-subtitle">Autonomous Travel Intelligence</span>
+                <h1 className="hero-title" style={{ textAlign: 'left', margin: '6px 0 16px 0' }}>
+                  Smart Tourist<br />Assistant
+                </h1>
+              </div>
               
-              <h2 style={{ fontSize: '1.3rem', fontWeight: 600, color: 'var(--text-secondary)', margin: '18px 0 24px 0' }}>
-                Specializing in <span className="typing-text">{typingText}</span>
-              </h2>
+              <div className="anim-slide-left-2">
+                <h2 style={{ fontSize: '1.35rem', fontWeight: 600, color: 'var(--text-secondary)', margin: '0 0 24px 0', textAlign: 'left' }}>
+                  Specializing in <span className="typing-text">{typingText}</span>
+                </h2>
+              </div>
 
-              <div className="glass" style={{ padding: '22px 26px', maxWidth: '580px', marginBottom: '30px', color: 'var(--text-secondary)', fontSize: '1rem', lineHeight: 1.7, border: '1px solid rgba(255, 255, 255, 0.08)' }}>
-                Your complete next-generation tourism companion. Discover local attractions, generate day-by-day AI itineraries, listen to audio guide stories, calculate fuel travel costs, and trigger 1-tap SOS emergency rescue.
+              <div className="anim-slide-left-3">
+                <div className="glass" style={{ padding: '22px 26px', maxWidth: '620px', marginBottom: '30px', color: 'var(--text-secondary)', fontSize: '1.02rem', lineHeight: 1.7, border: '1px solid rgba(255, 255, 255, 0.08)', textAlign: 'left' }}>
+                  Your complete next-generation tourism companion. Discover local attractions, generate day-by-day AI itineraries, listen to audio guide stories, calculate fuel travel costs, and trigger 1-tap SOS emergency rescue.
+                </div>
               </div>
 
               {/* Counter Stats Bar */}
-              <div style={{ display: 'flex', gap: '35px', marginBottom: '32px' }}>
+              <div className="anim-slide-left-4" style={{ display: 'flex', gap: '40px', marginBottom: '34px', justifyContent: 'flex-start' }}>
                 <div>
-                  <span style={{ display: 'block', fontSize: '2rem', fontWeight: 900, color: 'white' }}>10+</span>
+                  <span style={{ display: 'block', fontSize: '2.2rem', fontWeight: 900, color: 'white' }}>10+</span>
                   <span style={{ fontSize: '0.74rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Pro AI Features</span>
                 </div>
                 <div>
-                  <span style={{ display: 'block', fontSize: '2rem', fontWeight: 900, color: '#8B5CF6' }}>100%</span>
+                  <span style={{ display: 'block', fontSize: '2.2rem', fontWeight: 900, color: '#8B5CF6' }}>100%</span>
                   <span style={{ fontSize: '0.74rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Realtime OSM Data</span>
                 </div>
                 <div>
-                  <span style={{ display: 'block', fontSize: '2rem', fontWeight: 900, color: '#10B981' }}>3-Tier</span>
+                  <span style={{ display: 'block', fontSize: '2.2rem', fontWeight: 900, color: '#10B981' }}>3-Tier</span>
                   <span style={{ fontSize: '0.74rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Mirror Failover</span>
                 </div>
               </div>
 
               {/* Action Buttons */}
-              <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap' }}>
+              <div className="anim-slide-left-5" style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', justifyContent: 'flex-start' }}>
                 <button className="btn btn-primary" onClick={() => navigate('/app')}>
                   🚀 Launch Assistant
                 </button>
